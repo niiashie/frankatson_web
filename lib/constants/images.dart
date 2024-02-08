@@ -22,4 +22,6 @@ class AppImages {
   static const String aboutUs = "assets/images/about_us.jpg";
   static const String frimpong = "assets/images/frimpong2.jpg";
   static const String christian = "assets/images/christian.png";
+  static const eye = "assets/images/eye.svg";
+  static const eyeSlash = "assets/images/eye_slash.svg";
 }

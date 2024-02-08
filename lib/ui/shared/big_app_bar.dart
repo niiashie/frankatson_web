@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:frankoweb/app/locator.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
+import 'package:frankoweb/services/app.service.dart';
 import 'package:frankoweb/ui/big_screen/widgets/nav_menu_item.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -180,6 +182,44 @@ class _BigAppBarState extends State<BigAppBar> {
                         ),
                         onTap: () {},
                       ),
+                      FutureBuilder(
+                          future: locator<AppService>().getUser(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              if (snapshot.hasError) {
+                                return const SizedBox();
+                              } else if (snapshot.hasData) {
+                                debugPrint("snapshot: ${snapshot.data}");
+                                return PopupMenuButton(
+                                    icon: Icon(
+                                      Icons.person,
+                                      size: 28,
+                                      color: Colors.white,
+                                    ),
+                                    itemBuilder: (context) => const [
+                                          PopupMenuItem(
+                                            value: "aboutUs",
+                                            padding: EdgeInsets.zero,
+                                            child: SizedBox(
+                                              height: 70,
+                                              width: 150,
+                                              child: Center(
+                                                child: Text("About Us"),
+                                              ),
+                                            ),
+                                          ),
+                                        ]);
+                              }
+                            }
+                            return SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          })
                     ],
                   )
                 : Row(

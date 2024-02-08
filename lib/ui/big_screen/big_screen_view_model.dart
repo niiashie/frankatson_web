@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frankoweb/app/locator.dart';
 import 'package:frankoweb/constants/images.dart';
+import 'package:frankoweb/services/app.service.dart';
 import 'package:stacked/stacked.dart';
 
 class BigScreenViewModel extends BaseViewModel {
@@ -11,6 +13,7 @@ class BigScreenViewModel extends BaseViewModel {
   var key5 = GlobalKey();
   ScrollController scrollController = ScrollController();
   bool showScrollUp = false;
+  var appService = locator<AppService>();
   List<String> partnerNames = [
     "kepro",
     "VMD Livestock Pharma",
@@ -47,9 +50,21 @@ class BigScreenViewModel extends BaseViewModel {
       } else {
         showScrollUp = false;
       }
+
       rebuildUi();
+
       //debugPrint("Position : ${scrollController.offset}");
     });
+    checkLocalStorage();
+  }
+
+  checkLocalStorage() async {
+    Map<String, String> local = await appService.getUser();
+    if (local.isNotEmpty) {
+      debugPrint("User present");
+    } else {
+      debugPrint("User absent");
+    }
   }
 
   moveUp() {
