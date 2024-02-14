@@ -1,3 +1,6 @@
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html';
+
 import 'package:dio/dio.dart';
 import 'package:frankoweb/services/app.service.dart';
 import '../app/locator.dart';
@@ -5,7 +8,7 @@ import '../constants/api.dart';
 
 class BaseApi {
   AppService? appService = locator<AppService>();
-
+  final Storage localStorage = window.localStorage;
   Dio _getDio() {
     Dio dio = Dio(
       BaseOptions(
@@ -16,7 +19,7 @@ class BaseApi {
         responseType: ResponseType.json,
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${appService!.user?.token ?? ''}'
+          'Authorization': 'Bearer ${localStorage['token'] ?? ''}'
         },
       ),
     );

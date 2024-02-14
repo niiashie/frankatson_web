@@ -12,4 +12,9 @@ class NewsApi extends BaseApi {
     var response = await get(url: Api.news);
     return ApiResponse.parse(response);
   }
+
+  Future<ApiResponse> deleteNews(String id) async {
+    var response = await delete(url: "${Api.deleteNews}/$id");
+    return ApiResponse.parse(response);
+  }
 }

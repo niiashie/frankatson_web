@@ -22,6 +22,11 @@ class AppImages {
   static const String aboutUs = "assets/images/about_us.jpg";
   static const String frimpong = "assets/images/frimpong2.jpg";
   static const String christian = "assets/images/christian.png";
-  static const eye = "assets/images/eye.svg";
-  static const eyeSlash = "assets/images/eye_slash.svg";
+  static const String eye = "assets/images/eye.svg";
+  static const String eyeSlash = "assets/images/eye_slash.svg";
+  static const String gallery1 = "assets/images/gallery1.JPG";
+  static const String gallery2 = "assets/images/gallery2.JPG";
+  static const String gallery3 = "assets/images/gallery3.JPG";
+  static const String gallery4 = "assets/images/gallery4.JPG";
+  static const String gallery5 = "assets/images/gallery5.JPG";
 }

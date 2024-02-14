@@ -190,29 +190,85 @@ class _BigAppBarState extends State<BigAppBar> {
                               if (snapshot.hasError) {
                                 return const SizedBox();
                               } else if (snapshot.hasData) {
-                                debugPrint("snapshot: ${snapshot.data}");
-                                return PopupMenuButton(
-                                    icon: Icon(
-                                      Icons.person,
-                                      size: 28,
-                                      color: Colors.white,
-                                    ),
-                                    itemBuilder: (context) => const [
-                                          PopupMenuItem(
-                                            value: "aboutUs",
-                                            padding: EdgeInsets.zero,
-                                            child: SizedBox(
-                                              height: 70,
-                                              width: 150,
-                                              child: Center(
-                                                child: Text("About Us"),
+                                return snapshot.data!.isNotEmpty
+                                    ? PopupMenuButton(
+                                        icon: const Icon(
+                                          Icons.person,
+                                          size: 28,
+                                          color: Colors.white,
+                                        ),
+                                        padding: EdgeInsets.zero,
+                                        itemBuilder: (context) => [
+                                              PopupMenuItem(
+                                                value: "aboutUs",
+                                                padding: EdgeInsets.zero,
+                                                child: SizedBox(
+                                                    height: 70,
+                                                    width: 230,
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Container(
+                                                          width: 30,
+                                                          height: 30,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  color:
+                                                                      Colors.grey[
+                                                                          400],
+                                                                  shape: BoxShape
+                                                                      .circle),
+                                                          child: const Center(
+                                                            child: Icon(
+                                                              Icons.person,
+                                                              color:
+                                                                  Colors.white,
+                                                              size: 15,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              "${snapshot.data!['name']}",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontSize: 14),
+                                                            ),
+                                                            Text(
+                                                              "${snapshot.data!['email']}",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontSize: 14),
+                                                            )
+                                                          ],
+                                                        )
+                                                      ],
+                                                    )),
                                               ),
-                                            ),
-                                          ),
-                                        ]);
+                                            ])
+                                    : const SizedBox();
                               }
                             }
-                            return SizedBox(
+                            return const SizedBox(
                               width: 25,
                               height: 25,
                               child: Center(

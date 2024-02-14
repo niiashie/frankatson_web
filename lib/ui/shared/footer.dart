@@ -499,7 +499,10 @@ class _FooterState extends State<Footer> {
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 17),
                               ),
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.of(context)
+                                    .pushNamed(Routes.galleryScreen);
+                              },
                             ),
                           ],
                         ),

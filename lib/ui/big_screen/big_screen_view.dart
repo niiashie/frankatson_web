@@ -10,6 +10,7 @@ import 'package:frankoweb/ui/big_screen/widgets/service_item.dart';
 import 'package:frankoweb/ui/big_screen/widgets/top_shape.dart';
 import 'package:frankoweb/ui/shared/big_app_bar.dart';
 import 'package:frankoweb/ui/shared/footer.dart';
+import 'package:frankoweb/ui/shared/gallery_slider.dart';
 import 'package:frankoweb/ui/shared/hover_image.dart';
 import 'package:stacked/stacked.dart';
 
@@ -837,6 +838,9 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                           ],
                         ),
                       ),
+                      // const GallerySlider(
+                      //   images: [],
+                      // ),
                       Container(
                         key: viewModel.key5,
                         width: double.infinity,

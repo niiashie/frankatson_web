@@ -1,4 +1,5 @@
 import 'dart:async';
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
 
 import 'package:flutter/material.dart';
@@ -37,18 +38,27 @@ class AppService {
     localStorage['id'] = user.id.toString();
     localStorage['role'] = user.role!;
     localStorage['email'] = user.email!;
+    localStorage['token'] = user.token!;
   }
 
   Future<Map<String, String>> getUser() async {
     if (localStorage.isEmpty) {
       return {};
     } else {
+      // user = User(
+      //     id: int.parse(localStorage['id']!),
+      //     name: localStorage['name']!,
+      //     location: localStorage['location']!,
+      //     role: localStorage['role']!,
+      //     email: localStorage['email']!,
+      //     token: localStorage['token']!);
       return {
         "name": localStorage['name']!,
         "location": localStorage['location']!,
         "id": localStorage['id']!,
         "role": localStorage['role']!,
-        "email": localStorage['email']!
+        "email": localStorage['email']!,
+        "token": localStorage['token']!
       };
     }
   }
