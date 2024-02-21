@@ -857,7 +857,8 @@ class NewsView extends StackedView<NewsViewModel> {
                 if (snapshot.hasError) {
                   return const SizedBox();
                 } else if (snapshot.hasData) {
-                  return snapshot.data!.isNotEmpty
+                  return snapshot.data!.isNotEmpty &&
+                          snapshot.data!['role'] == "staff"
                       ? Visibility(
                           visible: !viewModel.showAddNews,
                           child: FloatingActionButton.extended(
@@ -881,27 +882,7 @@ class NewsView extends StackedView<NewsViewModel> {
                   child: CircularProgressIndicator(),
                 ),
               );
-            })
-        // Visibility(
-        //   visible: locator<AppService>().user != null
-        //       ? locator<AppService>().user!.role == "staff"
-        //           ? !viewModel.showManagesNews
-        //           : false
-        //       : false,
-        //   child:
-        //   FloatingActionButton.extended(
-        //       backgroundColor: AppColors.gradient2,
-        //       onPressed: () {
-        //         viewModel.displayManageNews();
-        //       },
-        //       icon: const Icon(
-        //         Icons.add,
-        //         color: Colors.white,
-        //       ),
-        //       label: const Text("Manage News")
-        //   ),
-        // ),
-        );
+            }));
   }
 
   @override

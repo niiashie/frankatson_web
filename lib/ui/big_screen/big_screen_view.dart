@@ -74,7 +74,10 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                     },
                                     facebookClicked: () {},
                                     linkedInClicked: () {},
-                                    blogClicked: () {},
+                                    blogClicked: () {
+                                      Navigator.of(context)
+                                          .pushNamed(Routes.blogScreen);
+                                    },
                                     instagramClicked: () {},
                                   )),
                               Visibility(
@@ -599,6 +602,7 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                 child: ListView.builder(
                                     itemCount: viewModel.partnerNames.length,
                                     scrollDirection: Axis.horizontal,
+                                    shrinkWrap: true,
                                     itemBuilder: (context, index) {
                                       return PartnerItem(
                                         image: viewModel.partnerImages[index],
@@ -838,9 +842,25 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                           ],
                         ),
                       ),
-                      // const GallerySlider(
-                      //   images: [],
-                      // ),
+                      const Text(
+                        "Our Gallery",
+                        style: TextStyle(
+                            color: AppColors.gradient2,
+                            fontSize: 30,
+                            fontFamily: AppFonts.poppinsBold),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        width: 50,
+                        height: 2,
+                        decoration: const BoxDecoration(
+                            color: AppColors.gradient1,
+                            borderRadius: BorderRadius.all(Radius.circular(1))),
+                      ),
+                      const SizedBox(height: 20),
+                      GallerySlider(images: viewModel.galleryImages),
                       Container(
                         key: viewModel.key5,
                         width: double.infinity,

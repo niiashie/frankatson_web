@@ -3,6 +3,7 @@ import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
 import 'package:frankoweb/constants/routes.dart';
+import 'dart:html' as html;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class Footer extends StatefulWidget {
@@ -472,7 +473,10 @@ class _FooterState extends State<Footer> {
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 17),
                               ),
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.of(context)
+                                    .pushNamed(Routes.partnersScreen);
+                              },
                             ),
                             const SizedBox(height: 10),
                             InkWell(
@@ -490,7 +494,11 @@ class _FooterState extends State<Footer> {
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 17),
                               ),
-                              onTap: () {},
+                              onTap: () {
+                                html.window.open(
+                                    'https://play.google.com/store/apps/details?id=com.ashie.material.affordable.frankatson',
+                                    "_blank");
+                              },
                             ),
                             const SizedBox(height: 10),
                             InkWell(

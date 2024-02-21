@@ -8,4 +8,7 @@ class Api {
   static const register = '$auth/register';
   static const news = "/news";
   static const deleteNews = "/deleteNews";
+  static const String gallery = "/gallery";
+  static const String deleteGallery = '/deleteGallery';
+  static const String blogCategories = '/blogCategories';
 }

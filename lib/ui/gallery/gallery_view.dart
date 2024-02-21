@@ -22,6 +22,7 @@ class GalleryScreenView extends StackedView<GalleryViewModel> {
 
   @override
   void onViewModelReady(GalleryViewModel viewModel) async {
+    viewModel.getPics();
     super.onViewModelReady(viewModel);
   }
 
@@ -432,11 +433,45 @@ class GalleryScreenView extends StackedView<GalleryViewModel> {
                           const SizedBox(
                             height: 30,
                           ),
-                          Container(
-                            width: MediaQuery.of(context).size.width / 1.5,
-                            padding: const EdgeInsets.only(top: 5, bottom: 5),
-                            color: Colors.amber,
-                          )
+                          Visibility(
+                              visible: viewModel.getPicsLoading,
+                              replacement: Container(
+                                width: MediaQuery.of(context).size.width / 1.5,
+                                padding:
+                                    const EdgeInsets.only(top: 5, bottom: 5),
+                                child: Wrap(
+                                  spacing: 20,
+                                  runSpacing: 20,
+                                  alignment: WrapAlignment.center,
+                                  children: viewModel.items,
+                                ),
+                              ),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width / 1.5,
+                                height: 400,
+                                child: const Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 25,
+                                      height: 25,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 1,
+                                        color: AppColors.gradient2,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      "Loading",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                              )),
                         ],
                       ),
                     )),
@@ -451,7 +486,8 @@ class GalleryScreenView extends StackedView<GalleryViewModel> {
                 if (snapshot.hasError) {
                   return const SizedBox();
                 } else if (snapshot.hasData) {
-                  return snapshot.data!.isNotEmpty
+                  return snapshot.data!.isNotEmpty &&
+                          snapshot.data!['role'] == "staff"
                       ? Visibility(
                           visible: !viewModel.showAddGallery,
                           child: FloatingActionButton.extended(
