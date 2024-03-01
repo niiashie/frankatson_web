@@ -42,4 +42,14 @@ class NewsApi extends BaseApi {
     var response = await post(url: Api.blogCategories, data: params);
     return ApiResponse.parse(response);
   }
+
+  Future<ApiResponse> uploadDocument(dynamic params) async {
+    var response = await post(url: Api.document, data: params);
+    return ApiResponse.parse(response);
+  }
+
+  Future<ApiResponse> getDocument() async {
+    var response = await get(url: Api.document);
+    return ApiResponse.parse(response);
+  }
 }

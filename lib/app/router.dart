@@ -3,6 +3,7 @@ import 'package:frankoweb/ui/about_us/about_us_view.dart';
 import 'package:frankoweb/ui/account/account_view.dart';
 import 'package:frankoweb/ui/big_screen/big_screen_view.dart';
 import 'package:frankoweb/ui/blog/blog_view.dart';
+import 'package:frankoweb/ui/docs/docs_view.dart';
 import 'package:frankoweb/ui/gallery/gallery_view.dart';
 import 'package:frankoweb/ui/news/news_view.dart';
 import 'package:frankoweb/ui/partners/partners_view.dart';
@@ -30,6 +31,9 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => const BlogScreenView());
       case Routes.smallScreen:
         return MaterialPageRoute(builder: (context) => const SmallScreenView());
+      case Routes.documentScreen:
+        return MaterialPageRoute(
+            builder: (context) => const DocumentScreenView());
       default:
         return MaterialPageRoute(builder: (context) => const BigScreenView());
     }

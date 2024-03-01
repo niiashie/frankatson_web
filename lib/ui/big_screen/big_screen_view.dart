@@ -454,7 +454,7 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                                               Radius.circular(
                                                                   10)),
                                                       child: Image.asset(
-                                                        AppImages.ceo,
+                                                        AppImages.director,
                                                         fit: BoxFit.fill,
                                                       ),
                                                     ),
@@ -667,7 +667,7 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                         children: [
                                           Expanded(
                                               child: HoverImage(
-                                            image: AppImages.ceo,
+                                            image: AppImages.director,
                                             name: 'Kwadwo Boakye',
                                             role: 'Managing Director',
                                           )),
@@ -689,7 +689,7 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                         children: [
                                           Expanded(
                                               child: HoverImage(
-                                            image: AppImages.ceo,
+                                            image: AppImages.director,
                                             name: 'Kwadwo Boakye',
                                             role: 'Managing Director',
                                           )),
@@ -702,7 +702,7 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.ceo,
-                                            name: 'Joyce',
+                                            name: 'Joyce Mensah',
                                             role: 'Human Resource Manager',
                                           )),
                                           Expanded(
@@ -731,7 +731,7 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.ceo,
-                                            name: 'Joyce',
+                                            name: 'Joyce Mensah',
                                             role: 'Human Resource Manager',
                                           )),
                                           Expanded(
@@ -764,7 +764,7 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                           )),
                                           Expanded(
                                               child: HoverImage(
-                                            image: AppImages.ceo,
+                                            image: AppImages.charlotte,
                                             name: 'Dr Charlotte',
                                             role: 'Veterinary Doctor',
                                           )),
@@ -822,7 +822,7 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                         children: [
                                           Expanded(
                                               child: HoverImage(
-                                            image: AppImages.ceo,
+                                            image: AppImages.charlotte,
                                             name: 'Dr Charlotte',
                                             role: 'Veterinary Doctor',
                                           )),
@@ -842,24 +842,33 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                           ],
                         ),
                       ),
-                      const Text(
-                        "Our Gallery",
-                        style: TextStyle(
-                            color: AppColors.gradient2,
-                            fontSize: 30,
-                            fontFamily: AppFonts.poppinsBold),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        width: 50,
-                        height: 2,
-                        decoration: const BoxDecoration(
-                            color: AppColors.gradient1,
-                            borderRadius: BorderRadius.all(Radius.circular(1))),
-                      ),
-                      const SizedBox(height: 20),
+                      Visibility(
+                          visible: viewModel.galleryImages.isNotEmpty,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Our Gallery",
+                                style: TextStyle(
+                                    color: AppColors.gradient2,
+                                    fontSize: 30,
+                                    fontFamily: AppFonts.poppinsBold),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Container(
+                                width: 50,
+                                height: 2,
+                                decoration: const BoxDecoration(
+                                    color: AppColors.gradient1,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(1))),
+                              ),
+                              const SizedBox(height: 20),
+                            ],
+                          )),
                       GallerySlider(images: viewModel.galleryImages),
                       Container(
                         key: viewModel.key5,

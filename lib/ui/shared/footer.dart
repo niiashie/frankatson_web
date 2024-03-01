@@ -1,8 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:frankoweb/app/locator.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
 import 'package:frankoweb/constants/routes.dart';
+import 'package:frankoweb/services/app.service.dart';
 import 'dart:html' as html;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -204,7 +208,10 @@ class _FooterState extends State<Footer> {
                               style:
                                   TextStyle(color: Colors.white, fontSize: 17),
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(Routes.newsScreen);
+                            },
                           ),
                           const SizedBox(height: 10),
                           InkWell(
@@ -213,16 +220,29 @@ class _FooterState extends State<Footer> {
                               style:
                                   TextStyle(color: Colors.white, fontSize: 17),
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(Routes.partnersScreen);
+                            },
                           ),
                           const SizedBox(height: 10),
                           InkWell(
                             child: const Text(
-                              "Blogs",
+                              "Documents",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 17),
                             ),
-                            onTap: () {},
+                            onTap: () async {
+                              Map<String, dynamic> data =
+                                  await locator<AppService>().getUser();
+                              if (data.isEmpty) {
+                                Navigator.of(context)
+                                    .pushNamed(Routes.accountScreen);
+                              } else {
+                                Navigator.of(context)
+                                    .pushNamed(Routes.documentScreen);
+                              }
+                            },
                           ),
                           const SizedBox(height: 10),
                           InkWell(
@@ -231,7 +251,11 @@ class _FooterState extends State<Footer> {
                               style:
                                   TextStyle(color: Colors.white, fontSize: 17),
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              html.window.open(
+                                  'https://play.google.com/store/apps/details?id=com.ashie.material.affordable.frankatson',
+                                  "_blank");
+                            },
                           ),
                         ],
                       ),
@@ -481,11 +505,21 @@ class _FooterState extends State<Footer> {
                             const SizedBox(height: 10),
                             InkWell(
                               child: const Text(
-                                "Blogs",
+                                "Documents",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 17),
                               ),
-                              onTap: () {},
+                              onTap: () async {
+                                Map<String, dynamic> data =
+                                    await locator<AppService>().getUser();
+                                if (data.isEmpty) {
+                                  Navigator.of(context)
+                                      .pushNamed(Routes.accountScreen);
+                                } else {
+                                  Navigator.of(context)
+                                      .pushNamed(Routes.documentScreen);
+                                }
+                              },
                             ),
                             const SizedBox(height: 10),
                             InkWell(
@@ -549,14 +583,14 @@ class _FooterState extends State<Footer> {
                               },
                             ),
                             const SizedBox(height: 10),
-                            InkWell(
-                              child: const Text(
-                                "Create Account",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 17),
-                              ),
-                              onTap: () {},
-                            ),
+                            // InkWell(
+                            //   child: const Text(
+                            //     "Create Account",
+                            //     style: TextStyle(
+                            //         color: Colors.white, fontSize: 17),
+                            //   ),
+                            //   onTap: () {},
+                            // ),
                           ],
                         ),
                       ),

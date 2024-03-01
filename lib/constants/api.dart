@@ -11,4 +11,5 @@ class Api {
   static const String gallery = "/gallery";
   static const String deleteGallery = '/deleteGallery';
   static const String blogCategories = '/blogCategories';
+  static const String document = '/document';
 }

@@ -20,8 +20,8 @@ class PartnerItem extends StatelessWidget {
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             child: Container(
-                width: 150,
-                height: 150,
+                width: MediaQuery.of(context).size.width >= 800 ? 150 : 100,
+                height: MediaQuery.of(context).size.width >= 800 ? 150 : 100,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),

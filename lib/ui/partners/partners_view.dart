@@ -213,7 +213,9 @@ class PartnersScreenView extends StackedView<PartnersViewModel> {
                           height: 40,
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width / 1.5,
+                          width: MediaQuery.of(context).size.width >= 800
+                              ? MediaQuery.of(context).size.width / 1.5
+                              : double.infinity,
                           padding: const EdgeInsets.only(top: 5, bottom: 5),
                           child: Wrap(
                             spacing: 20,

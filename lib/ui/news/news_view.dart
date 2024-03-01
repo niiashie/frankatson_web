@@ -850,39 +850,41 @@ class NewsView extends StackedView<NewsViewModel> {
                 ))
               ],
             )),
-        floatingActionButton: FutureBuilder(
-            future: locator<AppService>().getUser(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  return const SizedBox();
-                } else if (snapshot.hasData) {
-                  return snapshot.data!.isNotEmpty &&
-                          snapshot.data!['role'] == "staff"
-                      ? Visibility(
-                          visible: !viewModel.showAddNews,
-                          child: FloatingActionButton.extended(
-                              backgroundColor: AppColors.gradient2,
-                              onPressed: () {
-                                viewModel.displayManageNews();
-                              },
-                              icon: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
-                              label: const Text("Manage News")),
-                        )
-                      : const SizedBox();
-                }
-              }
-              return SizedBox(
-                width: 25,
-                height: 25,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }));
+        floatingActionButton: MediaQuery.of(context).size.width >= 800
+            ? FutureBuilder(
+                future: locator<AppService>().getUser(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasError) {
+                      return const SizedBox();
+                    } else if (snapshot.hasData) {
+                      return snapshot.data!.isNotEmpty &&
+                              snapshot.data!['role'] == "staff"
+                          ? Visibility(
+                              visible: !viewModel.showAddNews,
+                              child: FloatingActionButton.extended(
+                                  backgroundColor: AppColors.gradient2,
+                                  onPressed: () {
+                                    viewModel.displayManageNews();
+                                  },
+                                  icon: const Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                  label: const Text("Manage News")),
+                            )
+                          : const SizedBox();
+                    }
+                  }
+                  return const SizedBox(
+                    width: 25,
+                    height: 25,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                })
+            : const SizedBox());
   }
 
   @override

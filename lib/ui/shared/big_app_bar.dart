@@ -138,17 +138,17 @@ class _BigAppBarState extends State<BigAppBar> {
                         },
                         width: 70,
                       ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      NavMenuItem(
-                        title: 'Blog',
-                        selected: widget.blogSelected,
-                        onTap: () {
-                          widget.blogClicked();
-                        },
-                        width: 60,
-                      ),
+                      // const SizedBox(
+                      //   width: 5,
+                      // ),
+                      // NavMenuItem(
+                      //   title: 'Blog',
+                      //   selected: widget.blogSelected,
+                      //   onTap: () {
+                      //     widget.blogClicked();
+                      //   },
+                      //   width: 60,
+                      // ),
                       const SizedBox(
                         width: 25,
                       ),
@@ -334,8 +334,6 @@ class _BigAppBarState extends State<BigAppBar> {
                             widget.partnersClicked();
                           } else if (value == "team") {
                             widget.teamClicked();
-                          } else if (value == "blog") {
-                            widget.blogClicked();
                           }
                         },
                         itemBuilder: (context) => const [
@@ -376,16 +374,6 @@ class _BigAppBarState extends State<BigAppBar> {
                               height: 50,
                               child: Center(
                                 child: Text("Team"),
-                              ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "blog",
-                            padding: EdgeInsets.zero,
-                            child: SizedBox(
-                              height: 50,
-                              child: Center(
-                                child: Text("Blog"),
                               ),
                             ),
                           ),

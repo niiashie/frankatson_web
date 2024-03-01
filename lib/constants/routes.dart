@@ -7,4 +7,5 @@ class Routes {
   static const String galleryScreen = 'galleryScreen';
   static const String partnersScreen = 'partnersScreen';
   static const String blogScreen = 'blogScreen';
+  static const String documentScreen = 'documentScreen';
 }
