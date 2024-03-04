@@ -668,13 +668,13 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.director,
-                                            name: 'Kwadwo Boakye',
+                                            name: 'Mr Kwadwo Boakye',
                                             role: 'Managing Director',
                                           )),
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.ceo,
-                                            name: 'Kwame Boakye',
+                                            name: 'Mr Kwame Boakye',
                                             role: 'Deputy Managing Director',
                                           ))
                                         ],
@@ -690,26 +690,26 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.director,
-                                            name: 'Kwadwo Boakye',
+                                            name: 'Mr Kwadwo Boakye',
                                             role: 'Managing Director',
                                           )),
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.ceo,
-                                            name: 'Kwame Boakye',
+                                            name: 'Mr Kwame Boakye',
                                             role: 'Deputy Managing Director',
                                           )),
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.ceo,
-                                            name: 'Joyce Mensah',
-                                            role: 'Human Resource Manager',
+                                            name: 'Mrs Joyce Ofori',
+                                            role: 'General Manager',
                                           )),
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.ceo,
-                                            name: 'Amofa Boateng',
-                                            role: 'Head Of Accounts',
+                                            name: 'Mr Micheal Amofa Boateng',
+                                            role: 'Finance Manager',
                                           )),
                                         ],
                                       ),
@@ -731,14 +731,14 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.ceo,
-                                            name: 'Joyce Mensah',
-                                            role: 'Human Resource Manager',
+                                            name: 'Mrs Joyce Ofori',
+                                            role: 'General Manager',
                                           )),
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.ceo,
-                                            name: 'Amofa Boateng',
-                                            role: 'Head Of Accounts',
+                                            name: 'Mr Micheal Amofa Boateng',
+                                            role: 'Finance Manager',
                                           ))
                                         ],
                                       ),
@@ -754,25 +754,25 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                               child: HoverImage(
                                             image: AppImages.frimpong,
                                             name: 'Dr Victor Frimpong',
-                                            role: 'Veterinary Doctor',
+                                            role: 'VET. Sales Officer(Accra)',
                                           )),
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.ceo,
-                                            name: 'Dr Sefa Boachie',
-                                            role: 'Veterinary Doctor',
+                                            name: 'Dr Felix Sefa Boachie',
+                                            role: 'VET. Sales Officer(Kumasi)',
                                           )),
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.charlotte,
-                                            name: 'Dr Charlotte',
-                                            role: 'Veterinary Doctor',
+                                            name: 'Dr Charlotte Oppong',
+                                            role: 'VET. Sales Officer(Accra)',
                                           )),
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.christian,
                                             name: 'Christian Odoom',
-                                            role: 'Head Of Agrochemicals',
+                                            role: 'AGRO Sales ManagerF',
                                           )),
                                         ],
                                       ),
@@ -795,13 +795,13 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                               child: HoverImage(
                                             image: AppImages.frimpong,
                                             name: 'Dr Victor Frimpong',
-                                            role: 'Veterinary Doctor',
+                                            role: 'VET. Sales Officer(Accra)',
                                           )),
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.ceo,
                                             name: 'Dr Sefa Boachie',
-                                            role: 'Veterinary Doctor',
+                                            role: 'VET. Sales Officer(Kumasi)',
                                           )),
                                         ],
                                       ),
@@ -823,14 +823,14 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.charlotte,
-                                            name: 'Dr Charlotte',
-                                            role: 'Veterinary Doctor',
+                                            name: 'Dr Charlotte Oppong',
+                                            role: 'VET. Sales Officer(Accra)',
                                           )),
                                           Expanded(
                                               child: HoverImage(
                                             image: AppImages.christian,
                                             name: 'Christian Odoom',
-                                            role: 'Head Of Agrochemicals',
+                                            role: 'AGRO Sales Manager',
                                           )),
                                         ],
                                       ),

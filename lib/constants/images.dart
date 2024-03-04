@@ -1,7 +1,7 @@
 class AppImages {
   static const String logo = "assets/images/frankatson_logo.jpeg";
   static const String animals = "assets/images/farm_animals.png";
-  static const String ceo = "assets/images/ceo.jpg";
+  static const String ceo = "assets/images/placeholder.jpg";
   static const String agro = "assets/images/agriculture.png";
   static const String lab = "assets/images/microscope.png";
   static const String chick = "assets/images/chick.png";

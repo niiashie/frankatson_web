@@ -87,7 +87,12 @@ class _FooterState extends State<Footer> {
                                     size: 25,
                                     color: Colors.white,
                                   ),
-                                  onTap: () {},
+                                  onTap: () {
+                                    html.window.open(
+                                        'https://web.facebook.com/profile.php?id=100063269766759',
+                                        "_blank");
+                                    //https://web.facebook.com/profile.php?id=100063269766759
+                                  },
                                 ),
                               ),
                             ),
@@ -99,7 +104,11 @@ class _FooterState extends State<Footer> {
                                     size: 25,
                                     color: Colors.white,
                                   ),
-                                  onTap: () {},
+                                  onTap: () {
+                                    html.window.open(
+                                        'https://www.linkedin.com/company/frankatson/mycompany/',
+                                        "_blank");
+                                  },
                                 ),
                               ),
                             ),
@@ -111,7 +120,11 @@ class _FooterState extends State<Footer> {
                                     size: 25,
                                     color: Colors.white,
                                   ),
-                                  onTap: () {},
+                                  onTap: () {
+                                    html.window.open(
+                                        'https://www.instagram.com/frankatson/?hl=en',
+                                        "_blank");
+                                  },
                                 ),
                               ),
                             )
@@ -255,6 +268,7 @@ class _FooterState extends State<Footer> {
                               html.window.open(
                                   'https://play.google.com/store/apps/details?id=com.ashie.material.affordable.frankatson',
                                   "_blank");
+                              //https://www.instagram.com/frankatson/?hl=en
                             },
                           ),
                         ],
@@ -288,14 +302,6 @@ class _FooterState extends State<Footer> {
                             },
                           ),
                           const SizedBox(height: 10),
-                          InkWell(
-                            child: const Text(
-                              "Create Account",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 17),
-                            ),
-                            onTap: () {},
-                          ),
                         ],
                       ),
                     ],
@@ -355,7 +361,11 @@ class _FooterState extends State<Footer> {
                                     size: 25,
                                     color: Colors.white,
                                   ),
-                                  onTap: () {},
+                                  onTap: () {
+                                    html.window.open(
+                                        'https://web.facebook.com/profile.php?id=100063269766759',
+                                        "_blank");
+                                  },
                                 ),
                                 const SizedBox(
                                   width: 10,
@@ -366,7 +376,11 @@ class _FooterState extends State<Footer> {
                                     size: 25,
                                     color: Colors.white,
                                   ),
-                                  onTap: () {},
+                                  onTap: () {
+                                    html.window.open(
+                                        'https://www.linkedin.com/company/frankatson/mycompany/',
+                                        "_blank");
+                                  },
                                 ),
                                 const SizedBox(
                                   width: 10,
@@ -377,7 +391,11 @@ class _FooterState extends State<Footer> {
                                     size: 25,
                                     color: Colors.white,
                                   ),
-                                  onTap: () {},
+                                  onTap: () {
+                                    html.window.open(
+                                        'https://www.instagram.com/frankatson/?hl=en',
+                                        "_blank");
+                                  },
                                 ),
                               ],
                             ),

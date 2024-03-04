@@ -92,14 +92,15 @@ class _HoverImageState extends State<HoverImage>
         ),
         Text(
           widget.name,
+          textAlign: TextAlign.center,
           style: TextStyle(
               fontFamily: AppFonts.poppinsMedium,
-              fontSize: MediaQuery.of(context).size.width >= 800 ? 17 : 14),
+              fontSize: MediaQuery.of(context).size.width >= 800 ? 15 : 12),
         ),
         Text(
           widget.role,
           style: TextStyle(
-              fontSize: MediaQuery.of(context).size.width >= 800 ? 15 : 11),
+              fontSize: MediaQuery.of(context).size.width >= 800 ? 13 : 11),
         )
       ],
     );

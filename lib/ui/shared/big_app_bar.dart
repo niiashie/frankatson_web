@@ -4,6 +4,7 @@ import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
 import 'package:frankoweb/services/app.service.dart';
 import 'package:frankoweb/ui/big_screen/widgets/nav_menu_item.dart';
+import 'dart:html' as html;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class BigAppBar extends StatefulWidget {
@@ -158,7 +159,11 @@ class _BigAppBarState extends State<BigAppBar> {
                           size: 25,
                           color: Colors.white,
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          html.window.open(
+                              'https://web.facebook.com/profile.php?id=100063269766759',
+                              "_blank");
+                        },
                       ),
                       const SizedBox(
                         width: 10,
@@ -169,7 +174,11 @@ class _BigAppBarState extends State<BigAppBar> {
                           size: 25,
                           color: Colors.white,
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          html.window.open(
+                              'https://www.linkedin.com/company/frankatson/mycompany/',
+                              "_blank");
+                        },
                       ),
                       const SizedBox(
                         width: 10,
@@ -180,7 +189,11 @@ class _BigAppBarState extends State<BigAppBar> {
                           size: 25,
                           color: Colors.white,
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          html.window.open(
+                              'https://www.instagram.com/frankatson/?hl=en',
+                              "_blank");
+                        },
                       ),
                       FutureBuilder(
                           future: locator<AppService>().getUser(),
@@ -287,7 +300,11 @@ class _BigAppBarState extends State<BigAppBar> {
                           size: 20,
                           color: Colors.white,
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          html.window.open(
+                              'https://web.facebook.com/profile.php?id=100063269766759',
+                              "_blank");
+                        },
                       ),
                       const SizedBox(
                         width: 10,
@@ -298,7 +315,11 @@ class _BigAppBarState extends State<BigAppBar> {
                           size: 20,
                           color: Colors.white,
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          html.window.open(
+                              'https://www.linkedin.com/company/frankatson/mycompany/',
+                              "_blank");
+                        },
                       ),
                       const SizedBox(
                         width: 10,
@@ -309,7 +330,11 @@ class _BigAppBarState extends State<BigAppBar> {
                           size: 20,
                           color: Colors.white,
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          html.window.open(
+                              'https://www.instagram.com/frankatson/?hl=en',
+                              "_blank");
+                        },
                       ),
                       // const SizedBox(
                       //   width: 10,
