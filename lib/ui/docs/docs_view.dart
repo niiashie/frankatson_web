@@ -152,49 +152,49 @@ class DocumentScreenView extends StackedView<DocViewModel> {
                             ],
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: PopupMenuButton(
-                            padding: EdgeInsets.zero,
-                            icon: const Icon(
-                              Icons.list,
-                              color: Colors.white,
-                              size: 25,
-                            ),
-                            offset: const Offset(0.0, 60),
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15.0))),
-                            onSelected: (value) {
-                              if (value == "Account") {
-                              } else if (value == "news") {}
-                            },
-                            itemBuilder: (context) => const [
-                              PopupMenuItem(
-                                value: "login",
-                                padding: EdgeInsets.zero,
-                                child: SizedBox(
-                                  height: 50,
-                                  width: 200,
-                                  child: Center(
-                                    child: Text("Login"),
-                                  ),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                value: "news",
-                                padding: EdgeInsets.zero,
-                                child: SizedBox(
-                                  height: 50,
-                                  width: 200,
-                                  child: Center(
-                                    child: Text("News"),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
+                        // Align(
+                        //   alignment: Alignment.centerRight,
+                        //   child: PopupMenuButton(
+                        //     padding: EdgeInsets.zero,
+                        //     icon: const Icon(
+                        //       Icons.list,
+                        //       color: Colors.white,
+                        //       size: 25,
+                        //     ),
+                        //     offset: const Offset(0.0, 60),
+                        //     shape: const RoundedRectangleBorder(
+                        //         borderRadius:
+                        //             BorderRadius.all(Radius.circular(15.0))),
+                        //     onSelected: (value) {
+                        //       if (value == "Account") {
+                        //       } else if (value == "news") {}
+                        //     },
+                        //     itemBuilder: (context) => const [
+                        //       PopupMenuItem(
+                        //         value: "login",
+                        //         padding: EdgeInsets.zero,
+                        //         child: SizedBox(
+                        //           height: 50,
+                        //           width: 200,
+                        //           child: Center(
+                        //             child: Text("Login"),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //       PopupMenuItem(
+                        //         value: "news",
+                        //         padding: EdgeInsets.zero,
+                        //         child: SizedBox(
+                        //           height: 50,
+                        //           width: 200,
+                        //           child: Center(
+                        //             child: Text("News"),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // )
                       ],
                     ),
                   )),

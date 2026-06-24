@@ -17,6 +17,7 @@ class BigScreenViewModel extends BaseViewModel {
   var key5 = GlobalKey();
   ScrollController scrollController = ScrollController();
   bool showScrollUp = false;
+  bool isScrolled = false;
   NewsApi newsApi = NewsApi();
   var appService = locator<AppService>();
   List<String> galleryImages = [];
@@ -56,6 +57,8 @@ class BigScreenViewModel extends BaseViewModel {
       } else {
         showScrollUp = false;
       }
+
+      isScrolled = scrollController.offset > 80;
 
       rebuildUi();
 

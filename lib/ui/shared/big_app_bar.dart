@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frankoweb/app/locator.dart';
+import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
 import 'package:frankoweb/services/app.service.dart';
@@ -21,6 +22,7 @@ class BigAppBar extends StatefulWidget {
   final bool partnersSelected;
   final bool teamSelected;
   final bool blogSelected;
+  final bool isScrolled;
   const BigAppBar(
       {super.key,
       required this.aboutUsClicked,
@@ -35,22 +37,31 @@ class BigAppBar extends StatefulWidget {
       this.serviceSelected = false,
       this.partnersSelected = false,
       this.teamSelected = false,
-      this.blogSelected = false});
+      this.blogSelected = false,
+      this.isScrolled = false});
 
   @override
   State<BigAppBar> createState() => _BigAppBarState();
 }
 
 class _BigAppBarState extends State<BigAppBar> {
+  late final Future _userFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _userFuture = locator<AppService>().getUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       height: 70,
-      //color: Colors.amber,
       margin: const EdgeInsets.only(left: 20, right: 20, top: 15),
       child: Stack(
         children: [
+          // Logo + brand name — left
           Align(
             alignment: Alignment.centerLeft,
             child: Row(
@@ -61,103 +72,103 @@ class _BigAppBarState extends State<BigAppBar> {
                   elevation: 5,
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   child: Container(
-                    width: MediaQuery.of(context).size.width >= 800 ? 50 : 30,
-                    height: MediaQuery.of(context).size.width >= 800 ? 50 : 30,
+                    width:
+                        MediaQuery.of(context).size.width >= 800 ? 50 : 30,
+                    height:
+                        MediaQuery.of(context).size.width >= 800 ? 50 : 30,
                     decoration: const BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                        borderRadius:
+                            BorderRadius.all(Radius.circular(10))),
                     child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10)),
                       child: Image.asset(
                         AppImages.logo,
-                        width:
-                            MediaQuery.of(context).size.width >= 800 ? 50 : 30,
-                        height:
-                            MediaQuery.of(context).size.width >= 800 ? 50 : 30,
+                        width: MediaQuery.of(context).size.width >= 800
+                            ? 50
+                            : 30,
+                        height: MediaQuery.of(context).size.width >= 800
+                            ? 50
+                            : 30,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
+                const SizedBox(width: 10),
                 Text(
                   "Frankatson",
                   style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.gradient2,
                       fontFamily: AppFonts.poppinsMedium,
-                      fontSize:
-                          MediaQuery.of(context).size.width >= 800 ? 25 : 18),
+                      fontSize: MediaQuery.of(context).size.width >= 800
+                          ? 25
+                          : 18),
                 )
               ],
             ),
           ),
+          // Nav menu items — centered (desktop only)
+          if (MediaQuery.of(context).size.width >= 800)
+            Align(
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  NavMenuItem(
+                    title: 'About us',
+                    selected: widget.aboutUsSelected,
+                    isScrolled: true,
+                    onTap: () {
+                      widget.aboutUsClicked();
+                    },
+                    width: 100,
+                  ),
+                  const SizedBox(width: 5),
+                  NavMenuItem(
+                    title: 'Services',
+                    selected: widget.serviceSelected,
+                    isScrolled: true,
+                    onTap: () {
+                      widget.servicesClicked();
+                    },
+                    width: 100,
+                  ),
+                  const SizedBox(width: 5),
+                  NavMenuItem(
+                    title: 'Partners',
+                    selected: widget.partnersSelected,
+                    isScrolled: true,
+                    onTap: () {
+                      widget.partnersClicked();
+                    },
+                    width: 100,
+                  ),
+                  const SizedBox(width: 5),
+                  NavMenuItem(
+                    title: 'Team',
+                    selected: widget.teamSelected,
+                    isScrolled: true,
+                    onTap: () {
+                      widget.teamClicked();
+                    },
+                    width: 70,
+                  ),
+                ],
+              ),
+            ),
+          // Social icons + user menu — right
           Align(
             alignment: Alignment.centerRight,
             child: MediaQuery.of(context).size.width >= 800
                 ? Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      NavMenuItem(
-                        title: 'About us',
-                        selected: widget.aboutUsSelected,
-                        onTap: () {
-                          widget.aboutUsClicked();
-                        },
-                        width: 100,
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      NavMenuItem(
-                        title: 'Services',
-                        selected: widget.serviceSelected,
-                        onTap: () {
-                          widget.servicesClicked();
-                        },
-                        width: 100,
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      NavMenuItem(
-                        title: 'Partners',
-                        selected: widget.partnersSelected,
-                        onTap: () {
-                          widget.partnersClicked();
-                        },
-                        width: 100,
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      NavMenuItem(
-                        title: 'Team',
-                        selected: widget.teamSelected,
-                        onTap: () {
-                          widget.teamClicked();
-                        },
-                        width: 70,
-                      ),
-                      // const SizedBox(
-                      //   width: 5,
-                      // ),
-                      // NavMenuItem(
-                      //   title: 'Blog',
-                      //   selected: widget.blogSelected,
-                      //   onTap: () {
-                      //     widget.blogClicked();
-                      //   },
-                      //   width: 60,
-                      // ),
-                      const SizedBox(
-                        width: 25,
-                      ),
                       InkWell(
                         child: const Icon(
                           Icons.facebook,
                           size: 25,
-                          color: Colors.white,
+                          color: AppColors.gradient2,
                         ),
                         onTap: () {
                           html.window.open(
@@ -165,14 +176,12 @@ class _BigAppBarState extends State<BigAppBar> {
                               "_blank");
                         },
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
+                      const SizedBox(width: 10),
                       InkWell(
                         child: Icon(
                           MdiIcons.linkedin,
                           size: 25,
-                          color: Colors.white,
+                          color: AppColors.gradient2,
                         ),
                         onTap: () {
                           html.window.open(
@@ -180,14 +189,12 @@ class _BigAppBarState extends State<BigAppBar> {
                               "_blank");
                         },
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
+                      const SizedBox(width: 10),
                       InkWell(
                         child: Icon(
                           MdiIcons.instagram,
                           size: 25,
-                          color: Colors.white,
+                          color: AppColors.gradient2,
                         ),
                         onTap: () {
                           html.window.open(
@@ -196,7 +203,7 @@ class _BigAppBarState extends State<BigAppBar> {
                         },
                       ),
                       FutureBuilder(
-                          future: locator<AppService>().getUser(),
+                          future: _userFuture,
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.done) {
@@ -208,7 +215,7 @@ class _BigAppBarState extends State<BigAppBar> {
                                         icon: const Icon(
                                           Icons.person,
                                           size: 28,
-                                          color: Colors.white,
+                                          color: AppColors.gradient2,
                                         ),
                                         padding: EdgeInsets.zero,
                                         itemBuilder: (context) => [
@@ -233,9 +240,8 @@ class _BigAppBarState extends State<BigAppBar> {
                                                           height: 30,
                                                           decoration:
                                                               BoxDecoration(
-                                                                  color:
-                                                                      Colors.grey[
-                                                                          400],
+                                                                  color: Colors
+                                                                      .grey[400],
                                                                   shape: BoxShape
                                                                       .circle),
                                                           child: const Center(
@@ -248,8 +254,7 @@ class _BigAppBarState extends State<BigAppBar> {
                                                           ),
                                                         ),
                                                         const SizedBox(
-                                                          width: 10,
-                                                        ),
+                                                            width: 10),
                                                         Column(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
@@ -260,14 +265,14 @@ class _BigAppBarState extends State<BigAppBar> {
                                                           children: [
                                                             Text(
                                                               "${snapshot.data!['name']}",
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                   color: Colors
                                                                       .grey,
                                                                   fontSize: 14),
                                                             ),
                                                             Text(
                                                               "${snapshot.data!['email']}",
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                   color: Colors
                                                                       .grey,
                                                                   fontSize: 14),
@@ -298,7 +303,7 @@ class _BigAppBarState extends State<BigAppBar> {
                         child: const Icon(
                           Icons.facebook,
                           size: 20,
-                          color: Colors.white,
+                          color: AppColors.gradient2,
                         ),
                         onTap: () {
                           html.window.open(
@@ -306,14 +311,12 @@ class _BigAppBarState extends State<BigAppBar> {
                               "_blank");
                         },
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
+                      const SizedBox(width: 10),
                       InkWell(
                         child: Icon(
                           MdiIcons.linkedin,
                           size: 20,
-                          color: Colors.white,
+                          color: AppColors.gradient2,
                         ),
                         onTap: () {
                           html.window.open(
@@ -321,14 +324,12 @@ class _BigAppBarState extends State<BigAppBar> {
                               "_blank");
                         },
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
+                      const SizedBox(width: 10),
                       InkWell(
                         child: Icon(
                           MdiIcons.instagram,
                           size: 20,
-                          color: Colors.white,
+                          color: AppColors.gradient2,
                         ),
                         onTap: () {
                           html.window.open(
@@ -336,14 +337,11 @@ class _BigAppBarState extends State<BigAppBar> {
                               "_blank");
                         },
                       ),
-                      // const SizedBox(
-                      //   width: 10,
-                      // ),
                       PopupMenuButton(
                         padding: EdgeInsets.zero,
                         icon: const Icon(
                           Icons.list,
-                          color: Colors.white,
+                          color: AppColors.gradient2,
                           size: 25,
                         ),
                         offset: const Offset(0.0, 60),
@@ -367,9 +365,7 @@ class _BigAppBarState extends State<BigAppBar> {
                             padding: EdgeInsets.zero,
                             child: SizedBox(
                               height: 50,
-                              child: Center(
-                                child: Text("About Us"),
-                              ),
+                              child: Center(child: Text("About Us")),
                             ),
                           ),
                           PopupMenuItem(
@@ -377,9 +373,7 @@ class _BigAppBarState extends State<BigAppBar> {
                             padding: EdgeInsets.zero,
                             child: SizedBox(
                               height: 50,
-                              child: Center(
-                                child: Text("Services"),
-                              ),
+                              child: Center(child: Text("Services")),
                             ),
                           ),
                           PopupMenuItem(
@@ -387,9 +381,7 @@ class _BigAppBarState extends State<BigAppBar> {
                             padding: EdgeInsets.zero,
                             child: SizedBox(
                               height: 50,
-                              child: Center(
-                                child: Text("Partners"),
-                              ),
+                              child: Center(child: Text("Partners")),
                             ),
                           ),
                           PopupMenuItem(
@@ -397,9 +389,7 @@ class _BigAppBarState extends State<BigAppBar> {
                             padding: EdgeInsets.zero,
                             child: SizedBox(
                               height: 50,
-                              child: Center(
-                                child: Text("Team"),
-                              ),
+                              child: Center(child: Text("Team")),
                             ),
                           ),
                         ],

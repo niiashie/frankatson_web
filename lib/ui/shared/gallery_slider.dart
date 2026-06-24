@@ -1,4 +1,4 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' hide CarouselController;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frankoweb/constants/api.dart';

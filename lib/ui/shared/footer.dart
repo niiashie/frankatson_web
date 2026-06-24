@@ -258,19 +258,19 @@ class _FooterState extends State<Footer> {
                             },
                           ),
                           const SizedBox(height: 10),
-                          InkWell(
-                            child: const Text(
-                              "Products",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 17),
-                            ),
-                            onTap: () {
-                              html.window.open(
-                                  'https://play.google.com/store/apps/details?id=com.ashie.material.affordable.frankatson',
-                                  "_blank");
-                              //https://www.instagram.com/frankatson/?hl=en
-                            },
-                          ),
+                          // InkWell(
+                          //   child: const Text(
+                          //     "Products",
+                          //     style:
+                          //         TextStyle(color: Colors.white, fontSize: 17),
+                          //   ),
+                          //   onTap: () {
+                          //     html.window.open(
+                          //         'https://play.google.com/store/apps/details?id=com.ashie.material.affordable.frankatson',
+                          //         "_blank");
+                          //     //https://www.instagram.com/frankatson/?hl=en
+                          //   },
+                          // ),
                         ],
                       ),
                       const SizedBox(
@@ -540,19 +540,19 @@ class _FooterState extends State<Footer> {
                               },
                             ),
                             const SizedBox(height: 10),
-                            InkWell(
-                              child: const Text(
-                                "Products",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 17),
-                              ),
-                              onTap: () {
-                                html.window.open(
-                                    'https://play.google.com/store/apps/details?id=com.ashie.material.affordable.frankatson',
-                                    "_blank");
-                              },
-                            ),
-                            const SizedBox(height: 10),
+                            // InkWell(
+                            //   child: const Text(
+                            //     "Products",
+                            //     style: TextStyle(
+                            //         color: Colors.white, fontSize: 17),
+                            //   ),
+                            //   onTap: () {
+                            //     html.window.open(
+                            //         'https://play.google.com/store/apps/details?id=com.ashie.material.affordable.frankatson',
+                            //         "_blank");
+                            //   },
+                            // ),
+
                             InkWell(
                               child: const Text(
                                 "Gallery",
@@ -637,7 +637,7 @@ class _FooterState extends State<Footer> {
                         width: 15,
                       ),
                       Text(
-                        "2024 Frankatson | All rights reserved",
+                        "2026 Frankatson | All rights reserved",
                         style: TextStyle(color: Colors.white),
                       )
                     ],

@@ -7,12 +7,14 @@ class NavMenuItem extends StatefulWidget {
   final VoidCallback onTap;
   final double width;
   final bool? selected;
+  final bool isScrolled;
   const NavMenuItem(
       {super.key,
       required this.title,
       required this.onTap,
       this.selected = false,
-      required this.width});
+      required this.width,
+      this.isScrolled = false});
 
   @override
   State<NavMenuItem> createState() => _NavMenuItemState();
@@ -47,7 +49,9 @@ class _NavMenuItemState extends State<NavMenuItem> {
                     ? AppColors.gradient2
                     : selected
                         ? AppColors.gradient2
-                        : Colors.white,
+                        : widget.isScrolled
+                            ? AppColors.gradient2
+                            : Colors.white,
                 fontFamily: AppFonts.poppinsMedium,
                 fontSize: 15),
           ),
