@@ -65,7 +65,7 @@ class BigScreenViewModel extends BaseViewModel {
       //debugPrint("Position : ${scrollController.offset}");
     });
     checkLocalStorage();
-    getPics();
+    //getPics();
   }
 
   getPics() async {

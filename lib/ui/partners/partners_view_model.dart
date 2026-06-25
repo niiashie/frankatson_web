@@ -1,11 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:frankoweb/constants/images.dart';
-import 'package:frankoweb/ui/big_screen/widgets/partner_item.dart';
 import 'package:stacked/stacked.dart';
 
 class PartnersViewModel extends BaseViewModel {
-  List<PartnerItem> items = [];
+  final scrollController = ScrollController();
+  bool isScrolled = false;
+
   List<String> partnerNames = [
-    "kepro",
+    "Kepro",
     "VMD Livestock Pharma",
     "Arion Fasoli",
     "Hipra",
@@ -16,8 +18,9 @@ class PartnersViewModel extends BaseViewModel {
     "Vetko",
     "Nutriblock",
     "SKM Pharma",
-    "Hebei New Centry Pharmaceuticals"
+    "Hebei New Century Pharmaceuticals",
   ];
+
   List<String> partnerImages = [
     AppImages.kepro,
     AppImages.vmd,
@@ -30,20 +33,22 @@ class PartnersViewModel extends BaseViewModel {
     AppImages.vetko,
     AppImages.nutriblock,
     AppImages.skm,
-    AppImages.sunway
+    AppImages.sunway,
   ];
 
-  init() {
-    formulatePartners();
+  void init() {
+    scrollController.addListener(() {
+      final scrolled = scrollController.offset > 60;
+      if (scrolled != isScrolled) {
+        isScrolled = scrolled;
+        notifyListeners();
+      }
+    });
   }
 
-  formulatePartners() {
-    for (int i = 0; i < partnerImages.length; i++) {
-      items.add(PartnerItem(
-        image: partnerImages[i],
-        name: partnerNames[i],
-      ));
-    }
-    rebuildUi();
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }
