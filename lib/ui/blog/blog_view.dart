@@ -164,7 +164,7 @@ class BlogScreenView extends StackedView<BlogViewModel> {
                                     BorderRadius.all(Radius.circular(15.0))),
                             onSelected: (value) {
                               if (value == "Account") {
-                              } else if (value == "news") {}
+                              } else if (value == "posts") {}
                             },
                             itemBuilder: (context) => const [
                               PopupMenuItem(
@@ -179,13 +179,13 @@ class BlogScreenView extends StackedView<BlogViewModel> {
                                 ),
                               ),
                               PopupMenuItem(
-                                value: "news",
+                                value: "posts",
                                 padding: EdgeInsets.zero,
                                 child: SizedBox(
                                   height: 50,
                                   width: 200,
                                   child: Center(
-                                    child: Text("News"),
+                                    child: Text("Posts"),
                                   ),
                                 ),
                               ),
@@ -274,7 +274,7 @@ class BlogScreenView extends StackedView<BlogViewModel> {
                                   height: 10,
                                 ),
                                 const Text(
-                                  "Fill in the details required to add news",
+                                  "Fill in the details required to add a post",
                                   style: TextStyle(color: Colors.grey),
                                 ),
                                 const SizedBox(
@@ -524,7 +524,7 @@ class BlogScreenView extends StackedView<BlogViewModel> {
                                     ],
                                   ),
                                   onTap: () {
-                                    viewModel.backToNews();
+                                    viewModel.backToPosts();
                                   },
                                 ),
                                 const SizedBox(

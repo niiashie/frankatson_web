@@ -2,9 +2,9 @@ import 'package:frankoweb/api/base_api.dart';
 import 'package:frankoweb/constants/api.dart';
 import 'package:frankoweb/models/api_response.dart';
 
-class NewsApi extends BaseApi {
-  Future<ApiResponse> createNews(dynamic params) async {
-    var response = await post(url: Api.news, data: params);
+class PostsApi extends BaseApi {
+  Future<ApiResponse> createPost(dynamic params) async {
+    var response = await post(url: Api.posts, data: params);
     return ApiResponse.parse(response);
   }
 
@@ -18,13 +18,13 @@ class NewsApi extends BaseApi {
     return ApiResponse.parse(response);
   }
 
-  Future<ApiResponse> getNews() async {
-    var response = await get(url: Api.news);
+  Future<ApiResponse> getPosts() async {
+    var response = await get(url: Api.posts);
     return ApiResponse.parse(response);
   }
 
-  Future<ApiResponse> deleteNews(String id) async {
-    var response = await delete(url: "${Api.deleteNews}/$id");
+  Future<ApiResponse> deletePost(String id) async {
+    var response = await delete(url: "${Api.deletePost}/$id");
     return ApiResponse.parse(response);
   }
 
@@ -50,6 +50,26 @@ class NewsApi extends BaseApi {
 
   Future<ApiResponse> getDocument() async {
     var response = await get(url: Api.document);
+    return ApiResponse.parse(response);
+  }
+
+  Future<ApiResponse> getPostComments(String postId) async {
+    var response = await get(url: "${Api.postComments}/$postId");
+    return ApiResponse.parse(response);
+  }
+
+  Future<ApiResponse> addComment(dynamic params) async {
+    var response = await post(url: Api.postComments, data: params);
+    return ApiResponse.parse(response);
+  }
+
+  Future<ApiResponse> deleteComment(String commentId) async {
+    var response = await delete(url: "${Api.postComments}/$commentId");
+    return ApiResponse.parse(response);
+  }
+
+  Future<ApiResponse> likePost(dynamic params) async {
+    var response = await post(url: Api.postLikes, data: params);
     return ApiResponse.parse(response);
   }
 }

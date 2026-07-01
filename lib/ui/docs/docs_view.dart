@@ -499,7 +499,7 @@ class DocumentScreenView extends StackedView<DocViewModel> {
                             height: 10,
                           ),
                           const Text(
-                            "Fill in the details required to add news",
+                            "Fill in the details required to add a document",
                             style: TextStyle(color: Colors.grey),
                           ),
                           const SizedBox(

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:frankoweb/api/news_api.dart';
+import 'package:frankoweb/api/news_api.dart' show PostsApi;
 import 'package:frankoweb/app/locator.dart';
 import 'package:frankoweb/constants/api.dart';
 import 'package:frankoweb/constants/colors.dart';
@@ -134,12 +134,12 @@ class _GalleryItemState extends State<GalleryItem> {
   }
 
   deletePictureRequest() async {
-    NewsApi newsApi = NewsApi();
+    PostsApi postsApi = PostsApi();
     try {
       showLoading = true;
       setState(() {});
       ApiResponse deletePictureResponse =
-          await newsApi.deleteGallery(widget.gallery.id.toString());
+          await postsApi.deleteGallery(widget.gallery.id.toString());
       if (deletePictureResponse.ok) {
         showLoading = false;
         setState(() {});

@@ -218,13 +218,13 @@ class _BlogInfoScreenState extends State<BlogInfoScreen> {
                                 ),
                               ),
                               PopupMenuItem(
-                                value: "news",
+                                value: "posts",
                                 padding: EdgeInsets.zero,
                                 child: SizedBox(
                                   height: 50,
                                   width: 200,
                                   child: Center(
-                                    child: Text("News"),
+                                    child: Text("Posts"),
                                   ),
                                 ),
                               ),
@@ -305,7 +305,7 @@ class _BlogInfoScreenState extends State<BlogInfoScreen> {
                                   height: 10,
                                 ),
                                 const Text(
-                                  "Fill in the details required to add news",
+                                  "Fill in the details required to add a post",
                                   style: TextStyle(color: Colors.grey),
                                 ),
                                 const SizedBox(
@@ -591,7 +591,7 @@ class _BlogInfoScreenState extends State<BlogInfoScreen> {
                                     ],
                                   ),
                                   onTap: () {
-                                    backToNews();
+                                    backToPosts();
                                   },
                                 ),
                                 const SizedBox(
@@ -659,7 +659,7 @@ class _BlogInfoScreenState extends State<BlogInfoScreen> {
             }));
   }
 
-  backToNews() {
+  backToPosts() {
     showAddBlog = false;
     setState(() {});
   }

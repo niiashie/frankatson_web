@@ -4,7 +4,7 @@ import 'dart:html' as html;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:frankoweb/api/news_api.dart';
+import 'package:frankoweb/api/news_api.dart' show PostsApi;
 import 'package:frankoweb/app/locator.dart';
 import 'package:frankoweb/models/api_response.dart';
 import 'package:frankoweb/models/gallery.dart';
@@ -22,7 +22,7 @@ class GalleryViewModel extends BaseViewModel {
   Uint8List? bytesData;
   List<int>? selectedFile;
   var appService = locator<AppService>();
-  NewsApi newsApi = NewsApi();
+  PostsApi postsApi = PostsApi();
   List<GalleryItem> items = [];
   displayAddGallery() {
     showAddGallery = true;
@@ -68,7 +68,7 @@ class GalleryViewModel extends BaseViewModel {
       items.clear();
       rebuildUi();
 
-      ApiResponse response = await newsApi.getGallery();
+      ApiResponse response = await postsApi.getGallery();
       if (response.ok) {
         List<dynamic> picList = response.data;
         for (var obj in picList) {
@@ -101,7 +101,7 @@ class GalleryViewModel extends BaseViewModel {
         rebuildUi();
 
         ApiResponse createNewsResponse =
-            await newsApi.addPictureToGallery(data);
+            await postsApi.addPictureToGallery(data);
         if (createNewsResponse.ok) {
           appService.showErrorFromApiRequest(
               title: "Picture Upload",

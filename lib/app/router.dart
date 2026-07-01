@@ -17,8 +17,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => const BigScreenView());
       case Routes.aboutUsScreen:
         return MaterialPageRoute(builder: (context) => const AboutUsView());
-      case Routes.newsScreen:
-        return MaterialPageRoute(builder: (context) => const NewsView());
+      case Routes.postsScreen:
+        return MaterialPageRoute(builder: (context) => const PostsView());
       case Routes.accountScreen:
         return MaterialPageRoute(builder: (context) => const AccountsView());
       case Routes.galleryScreen:

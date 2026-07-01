@@ -5,6 +5,9 @@ class User {
   String? location;
   String? token;
   String? role;
+  int? roleId;
+  String? image;
+  List<String>? permissions;
 
   User({
     this.id,
@@ -13,21 +16,30 @@ class User {
     this.location,
     this.role,
     this.token,
+    this.roleId,
+    this.image,
+    this.permissions,
   });
 
   User.fromJson(Map<String, dynamic> json, String type) {
     if (type == "login") {
+      id = json['user']['id'];
       name = json['user']['name'];
       email = json['user']['email'];
       location = json['user']['location'];
-      id = json['user']['id'];
+      roleId = json['user']['role_id'];
+      image = json['user']['image'];
       token = json['token'];
-      role = json['user']['role'];
+      final roleObj = json['user']['role'];
+      role = roleObj?['name'];
+      permissions = roleObj != null
+          ? List<String>.from(roleObj['permissions'] ?? [])
+          : [];
     } else {
+      id = json['id'];
       name = json['name'];
       email = json['email'];
       location = json['location'];
-      id = json['id'];
       role = json['roles'];
     }
   }

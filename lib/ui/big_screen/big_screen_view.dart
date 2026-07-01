@@ -53,8 +53,10 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                   ServicesSection(sectionKey: viewModel.key2),
                   PartnersSection(
                     sectionKey: viewModel.key3,
-                    partnerImages: viewModel.partnerImages,
-                    partnerNames: viewModel.partnerNames,
+                    partnerImages: viewModel.partnerImages.take(6).toList(),
+                    partnerNames: viewModel.partnerNames.take(6).toList(),
+                    onViewMore: () => Navigator.of(context)
+                        .pushNamed(Routes.partnersScreen),
                   ),
                   CoreTeamSection(sectionKey: viewModel.key4),
                   GallerySection(images: viewModel.galleryImages),

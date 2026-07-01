@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:frankoweb/api/news_api.dart';
+import 'package:frankoweb/api/news_api.dart' show PostsApi;
 import 'package:frankoweb/app/locator.dart';
 import 'package:frankoweb/models/api_response.dart';
 import 'package:frankoweb/services/app.service.dart';
@@ -18,7 +18,7 @@ class DocViewModel extends BaseViewModel {
   html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
   List<dynamic> docList = [];
   html.File? file;
-  NewsApi newsApi = NewsApi();
+  PostsApi postsApi = PostsApi();
   String filename = "No file selected", postedBy = "";
   List<int>? selectedFile;
   Uint8List? bytesData;
@@ -50,7 +50,7 @@ class DocViewModel extends BaseViewModel {
     getDocumentLoading = true;
     rebuildUi();
     try {
-      ApiResponse docResponse = await newsApi.getDocument();
+      ApiResponse docResponse = await postsApi.getDocument();
       if (docResponse.ok) {
         getDocumentLoading = false;
         rebuildUi();
@@ -96,7 +96,7 @@ class DocViewModel extends BaseViewModel {
       try {
         uploadDocumentLoading = true;
         rebuildUi();
-        ApiResponse documentResponse = await newsApi.uploadDocument(data);
+        ApiResponse documentResponse = await postsApi.uploadDocument(data);
         if (documentResponse.ok) {
           appService.showErrorFromApiRequest(
               title: "Document Upload",

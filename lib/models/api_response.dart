@@ -43,6 +43,11 @@ class ApiResponse {
           totalDataValue = meta['total'];
           totalPagesValue = meta['last_page'];
           currentPageValue = meta['current_page'];
+        } else {
+          // flat pagination (no meta wrapper)
+          totalDataValue = body['total'];
+          totalPagesValue = body['last_page'];
+          currentPageValue = body['current_page'];
         }
 
         message = body["message"] ?? "Sorry, something went wrong.";

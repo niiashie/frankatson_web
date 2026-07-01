@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
 
@@ -33,34 +34,43 @@ class AppService {
   );
 
   Future save(User user) async {
-    localStorage['name'] = user.name!;
-    localStorage['location'] = user.location!;
     localStorage['id'] = user.id.toString();
-    localStorage['role'] = user.role!;
+    localStorage['name'] = user.name!;
     localStorage['email'] = user.email!;
+    localStorage['location'] = user.location!;
+    localStorage['role'] = user.role ?? '';
+    localStorage['role_id'] = user.roleId?.toString() ?? '';
+    localStorage['image'] = user.image ?? '';
     localStorage['token'] = user.token!;
+    localStorage['permissions'] = jsonEncode(user.permissions ?? []);
   }
 
   Future<Map<String, String>> getUser() async {
     if (localStorage.isEmpty) {
       return {};
     } else {
-      // user = User(
-      //     id: int.parse(localStorage['id']!),
-      //     name: localStorage['name']!,
-      //     location: localStorage['location']!,
-      //     role: localStorage['role']!,
-      //     email: localStorage['email']!,
-      //     token: localStorage['token']!);
       return {
-        "name": localStorage['name']!,
-        "location": localStorage['location']!,
         "id": localStorage['id']!,
-        "role": localStorage['role']!,
+        "name": localStorage['name']!,
         "email": localStorage['email']!,
-        "token": localStorage['token']!
+        "location": localStorage['location']!,
+        "role": localStorage['role']!,
+        "role_id": localStorage['role_id']!,
+        "image": localStorage['image']!,
+        "token": localStorage['token']!,
+        "permissions": localStorage['permissions']!,
       };
     }
+  }
+
+  List<String> getPermissions() {
+    final raw = localStorage['permissions'];
+    if (raw == null || raw.isEmpty) return [];
+    return List<String>.from(jsonDecode(raw));
+  }
+
+  bool hasPermission(String permission) {
+    return getPermissions().contains(permission);
   }
 
   showErrorFromApiRequest({String? message, String? title = "Whoops!!!"}) {

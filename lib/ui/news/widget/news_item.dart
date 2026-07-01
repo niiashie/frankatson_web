@@ -5,19 +5,20 @@ import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/models/news.dart';
 import 'package:frankoweb/ui/shared/custom_button.dart';
 
-class NewsItem extends StatefulWidget {
-  final News newsItem;
-  const NewsItem({super.key, required this.newsItem});
+class PostItem extends StatefulWidget {
+  final Post postItem;
+  const PostItem({super.key, required this.postItem});
 
   @override
-  State<NewsItem> createState() => _NewsItemState();
+  State<PostItem> createState() => _PostItemState();
 }
 
-class _NewsItemState extends State<NewsItem> {
+class _PostItemState extends State<PostItem> {
   bool showMore = false;
 
   @override
   void initState() {
+    debugPrint("image url : ${Api.dataUrl}${widget.postItem.image}");
     super.initState();
     showMore = false;
   }
@@ -37,22 +38,46 @@ class _NewsItemState extends State<NewsItem> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(5)),
-              child: Image.network(
-                "${Api.dataUrl}${widget.newsItem.image}",
-                width: double.infinity,
-                height: 200,
-                fit: BoxFit.fill,
-              ),
-            ),
+            Builder(builder: (context) {
+              final url = "${Api.dataUrl}${widget.postItem.image}";
+              debugPrint("PostItem image URL: $url");
+              return ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                child: Image.network(
+                  url,
+                  width: double.infinity,
+                  height: 200,
+                  fit: BoxFit.fill,
+                  errorBuilder: (_, error, __) => Container(
+                    width: double.infinity,
+                    height: 200,
+                    color: Colors.grey[100],
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.broken_image_outlined,
+                            color: Colors.grey, size: 32),
+                        const SizedBox(height: 8),
+                        Text(
+                          url,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              color: Colors.red, fontSize: 11),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }),
             const SizedBox(
               height: 10,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),
               child: Text(
-                widget.newsItem.title!,
+                widget.postItem.title!,
                 textAlign: TextAlign.left,
                 style:
                     const TextStyle(color: AppColors.gradient2, fontSize: 12),
@@ -64,7 +89,7 @@ class _NewsItemState extends State<NewsItem> {
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),
               child: Text(
-                widget.newsItem.description!,
+                widget.postItem.description!,
                 style: const TextStyle(
                   color: Colors.grey,
                 ),
@@ -78,7 +103,7 @@ class _NewsItemState extends State<NewsItem> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15),
                 child: Text(
-                  widget.newsItem.content!,
+                  widget.postItem.content!,
                   style: const TextStyle(
                     color: Colors.grey,
                   ),

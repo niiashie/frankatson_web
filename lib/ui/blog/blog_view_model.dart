@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:frankoweb/api/news_api.dart';
+import 'package:frankoweb/api/news_api.dart' show PostsApi;
 import 'package:frankoweb/app/locator.dart';
 import 'package:frankoweb/models/api_response.dart';
 import 'package:frankoweb/models/blog_category.dart';
@@ -20,7 +20,7 @@ class BlogViewModel extends BaseViewModel {
       blogCategoryLoading = false,
       showAddBlogCategory = false,
       addBlogCategoryLoading = false;
-  NewsApi newsApi = NewsApi();
+  PostsApi postsApi = PostsApi();
   List<BlogCategoryItem> items = [];
   var appService = locator<AppService>();
   TextEditingController? name, description;
@@ -46,7 +46,7 @@ class BlogViewModel extends BaseViewModel {
     rebuildUi();
   }
 
-  backToNews() {
+  backToPosts() {
     showAddBlogCategory = false;
     rebuildUi();
   }
@@ -65,11 +65,11 @@ class BlogViewModel extends BaseViewModel {
           rebuildUi();
 
           ApiResponse createNewsResponse =
-              await newsApi.createBlogCategory(data);
+              await postsApi.createBlogCategory(data);
           if (createNewsResponse.ok) {
             debugPrint("response: ${createNewsResponse.body}");
             appService.showErrorFromApiRequest(
-                title: "News Upload", message: "Successfully uploaded news");
+                title: "Post Upload", message: "Successfully uploaded post");
             addBlogCategoryLoading = false;
             showAddBlogCategory = false;
             reset();
@@ -126,7 +126,7 @@ class BlogViewModel extends BaseViewModel {
 
       rebuildUi();
 
-      var response = await newsApi.getBlogCategory();
+      var response = await postsApi.getBlogCategory();
       if (response.ok) {
         List<dynamic> newsData = response.body;
         for (var obj in newsData) {

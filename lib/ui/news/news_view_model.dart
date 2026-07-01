@@ -14,60 +14,69 @@ import 'dart:typed_data';
 import '../../../services/dialog.service.dart' as dialog;
 import 'dart:html' as html;
 
-class NewsViewModel extends BaseViewModel {
-  bool showManagesNews = false,
-      showAddNews = false,
-      createNewsLoading = false,
-      getNewsLoading = false;
+class PostsViewModel extends BaseViewModel {
+  bool showManagesPosts = false,
+      showAddPost = false,
+      createPostLoading = false,
+      getPostsLoading = false;
   TextEditingController? title, content, description;
   html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
-  final GlobalKey<FormState> newsKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> postKey = GlobalKey<FormState>();
   var appService = locator<AppService>();
   List<int>? selectedFile;
   html.File? file;
   Uint8List? bytesData;
-  List<Map<String, dynamic>> newsList = [];
-  List<NewsItem> newsItems = [];
+  List<Map<String, dynamic>> postsList = [];
+  List<PostItem> postItems = [];
+  int totalPosts = 0;
 
-  NewsApi newsApi = NewsApi();
+  PostsApi postsApi = PostsApi();
+  ScrollController scrollController = ScrollController();
+  bool isScrolled = false;
 
   init() {
     title = TextEditingController(text: "");
     content = TextEditingController(text: "");
     description = TextEditingController(text: "");
-    getNews();
+    scrollController.addListener(() {
+      isScrolled = scrollController.offset > 80;
+      rebuildUi();
+    });
+    getPosts();
   }
 
-  displayManageNews() {
-    showManagesNews = true;
+  displayManagePosts() {
+    showManagesPosts = true;
     rebuildUi();
   }
 
-  backToNews() {
-    showManagesNews = false;
-    showAddNews = false;
+  backToPosts() {
+    showManagesPosts = false;
+    showAddPost = false;
     rebuildUi();
   }
 
-  getNews() async {
+  getPosts() async {
     try {
-      getNewsLoading = true;
-      newsList.clear();
-      newsItems.clear();
+      getPostsLoading = true;
+      postsList.clear();
+      postItems.clear();
       rebuildUi();
 
-      var response = await newsApi.getNews();
+      var response = await postsApi.getPosts();
       if (response.ok) {
-        List<dynamic> newsData = response.data;
-        for (var obj in newsData) {
-          newsItems.add(NewsItem(newsItem: News.fromJson(obj)));
-          newsList.add({"news": News.fromJson(obj), "loading": false});
+        totalPosts = response.totalData ?? 0;
+        List<dynamic> postsData = response.data;
+        for (var obj in postsData) {
+          final post = Post.fromJson(obj);
+          postItems.add(PostItem(postItem: post));
+          postsList.add({"post": post, "loading": false});
         }
       }
-      getNewsLoading = false;
+      getPostsLoading = false;
       rebuildUi();
     } on DioException catch (e) {
-      getNewsLoading = false;
+      getPostsLoading = false;
       rebuildUi();
       ApiResponse errorResponse = ApiResponse.parse(e.response);
       debugPrint(errorResponse.message);
@@ -75,35 +84,34 @@ class NewsViewModel extends BaseViewModel {
     }
   }
 
-  deleteNews(int index) {
+  deletePost(int index) {
     dialog.DialogService().show(
-        title: "Delete News",
-        message: "Do you really want to delete news",
+        title: "Delete Post",
+        message: "Do you really want to delete this post",
         okayBtnText: "Yes",
         cancelBtnText: "No",
         onOkayTap: () {
           Navigator.of(StackedService.navigatorKey!.currentContext!).pop();
-          deleteNewsRequest(index);
+          deletePostRequest(index);
         },
         onCancelTap: () {
           Navigator.of(StackedService.navigatorKey!.currentContext!).pop();
         });
   }
 
-  deleteNewsRequest(int index) async {
-    Map<String, dynamic> selectedNewsObject = newsList[index];
+  deletePostRequest(int index) async {
+    Map<String, dynamic> selectedPostObject = postsList[index];
     try {
-      selectedNewsObject['loading'] = true;
+      selectedPostObject['loading'] = true;
       rebuildUi();
-      ApiResponse deleteNewsResponse =
-          await newsApi.deleteNews(selectedNewsObject['news'].id.toString());
-      if (deleteNewsResponse.ok) {
-        newsList.removeAt(index);
+      ApiResponse deletePostResponse =
+          await postsApi.deletePost(selectedPostObject['post'].id.toString());
+      if (deletePostResponse.ok) {
+        postsList.removeAt(index);
         rebuildUi();
       }
-      if (deleteNewsResponse.ok) {}
     } on DioException catch (e) {
-      selectedNewsObject['loading'] = false;
+      selectedPostObject['loading'] = false;
       rebuildUi();
       ApiResponse errorResponse = ApiResponse.parse(e.response);
       debugPrint(errorResponse.message);
@@ -111,8 +119,8 @@ class NewsViewModel extends BaseViewModel {
     }
   }
 
-  createNews() async {
-    if (newsKey.currentState!.validate()) {
+  createPost() async {
+    if (postKey.currentState!.validate()) {
       if (file != null) {
         FormData data = FormData.fromMap({
           "title": title!.text,
@@ -123,20 +131,20 @@ class NewsViewModel extends BaseViewModel {
         });
 
         try {
-          createNewsLoading = true;
+          createPostLoading = true;
           rebuildUi();
 
-          ApiResponse createNewsResponse = await newsApi.createNews(data);
-          if (createNewsResponse.ok) {
-            debugPrint("response: ${createNewsResponse.body}");
+          ApiResponse createPostResponse = await postsApi.createPost(data);
+          if (createPostResponse.ok) {
+            debugPrint("response: ${createPostResponse.body}");
             appService.showErrorFromApiRequest(
-                title: "News Upload", message: "Successfully uploaded news");
-            createNewsLoading = false;
+                title: "Post Upload", message: "Successfully uploaded post");
+            createPostLoading = false;
             reset();
-            getNews();
+            getPosts();
           }
         } on DioException catch (e) {
-          createNewsLoading = false;
+          createPostLoading = false;
           rebuildUi();
           ApiResponse errorResponse = ApiResponse.parse(e.response);
           debugPrint(errorResponse.message);
@@ -185,8 +193,8 @@ class NewsViewModel extends BaseViewModel {
     });
   }
 
-  displayAddNews() {
-    showAddNews = true;
+  displayAddPost() {
+    showAddPost = true;
     rebuildUi();
   }
 }

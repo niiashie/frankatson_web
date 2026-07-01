@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:frankoweb/api/news_api.dart';
+import 'package:frankoweb/api/news_api.dart' show PostsApi;
 import 'package:frankoweb/app/locator.dart';
 import 'package:frankoweb/constants/images.dart';
 import 'package:frankoweb/models/api_response.dart';
@@ -18,7 +18,7 @@ class BigScreenViewModel extends BaseViewModel {
   ScrollController scrollController = ScrollController();
   bool showScrollUp = false;
   bool isScrolled = false;
-  NewsApi newsApi = NewsApi();
+  PostsApi postsApi = PostsApi();
   var appService = locator<AppService>();
   List<String> galleryImages = [];
   List<String> partnerNames = [
@@ -70,7 +70,7 @@ class BigScreenViewModel extends BaseViewModel {
 
   getPics() async {
     try {
-      ApiResponse response = await newsApi.getGallery();
+      ApiResponse response = await postsApi.getGallery();
       if (response.ok) {
         List<dynamic> picList = response.data;
         for (var obj in picList) {

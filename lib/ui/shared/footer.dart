@@ -217,13 +217,13 @@ class _FooterState extends State<Footer> {
                           const SizedBox(height: 10),
                           InkWell(
                             child: const Text(
-                              "News",
+                              "Posts",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 17),
                             ),
                             onTap: () {
                               Navigator.of(context)
-                                  .pushNamed(Routes.newsScreen);
+                                  .pushNamed(Routes.postsScreen);
                             },
                           ),
                           const SizedBox(height: 10),
@@ -499,13 +499,13 @@ class _FooterState extends State<Footer> {
                             const SizedBox(height: 22),
                             InkWell(
                               child: const Text(
-                                "News",
+                                "Posts",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 17),
                               ),
                               onTap: () {
                                 Navigator.of(context)
-                                    .pushNamed(Routes.newsScreen);
+                                    .pushNamed(Routes.postsScreen);
                               },
                             ),
                             const SizedBox(height: 10),
@@ -553,17 +553,17 @@ class _FooterState extends State<Footer> {
                             //   },
                             // ),
 
-                            InkWell(
-                              child: const Text(
-                                "Gallery",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 17),
-                              ),
-                              onTap: () {
-                                Navigator.of(context)
-                                    .pushNamed(Routes.galleryScreen);
-                              },
-                            ),
+                            // InkWell(
+                            //   child: const Text(
+                            //     "Gallery",
+                            //     style: TextStyle(
+                            //         color: Colors.white, fontSize: 17),
+                            //   ),
+                            //   onTap: () {
+                            //     Navigator.of(context)
+                            //         .pushNamed(Routes.galleryScreen);
+                            //   },
+                            // ),
                           ],
                         ),
                       ),
