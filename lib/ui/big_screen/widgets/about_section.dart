@@ -140,7 +140,7 @@ class AboutSection extends StatelessWidget {
                     color: Colors.white,
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      child: Image.asset(AppImages.director, fit: BoxFit.cover),
+                      child: Image.asset(AppImages.director, fit: BoxFit.fill),
                     ),
                   ),
                 ),

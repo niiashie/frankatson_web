@@ -226,7 +226,7 @@ class _PostSlideState extends State<_PostSlide> {
       child: Image.network(
         _imageUrl,
         // Show the whole image — no cropping — within the available box.
-        fit: BoxFit.contain,
+        fit: BoxFit.fill,
         width: double.infinity,
         height: double.infinity,
         loadingBuilder: (_, child, progress) => progress == null
