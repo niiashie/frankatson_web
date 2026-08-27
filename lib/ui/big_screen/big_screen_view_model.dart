@@ -5,6 +5,7 @@ import 'package:frankoweb/app/locator.dart';
 import 'package:frankoweb/constants/images.dart';
 import 'package:frankoweb/models/api_response.dart';
 import 'package:frankoweb/models/gallery.dart';
+import 'package:frankoweb/models/news.dart';
 import 'package:frankoweb/services/app.service.dart';
 import 'package:stacked/stacked.dart';
 
@@ -21,6 +22,8 @@ class BigScreenViewModel extends BaseViewModel {
   PostsApi postsApi = PostsApi();
   var appService = locator<AppService>();
   List<String> galleryImages = [];
+  List<Post> recentPosts = [];
+  bool recentPostsLoading = false;
   List<String> partnerNames = [
     "kepro",
     "VMD Livestock Pharma",
@@ -65,7 +68,38 @@ class BigScreenViewModel extends BaseViewModel {
       //debugPrint("Position : ${scrollController.offset}");
     });
     checkLocalStorage();
+    getRecentPosts();
     //getPics();
+  }
+
+  getRecentPosts() async {
+    try {
+      recentPostsLoading = true;
+      rebuildUi();
+
+      ApiResponse response = await postsApi.getPosts();
+      if (response.ok && response.data is List) {
+        final all = (response.data as List)
+            .map((obj) => Post.fromJson(obj))
+            .toList();
+        // Newest first — fall back to API order when a post has no date.
+        all.sort((a, b) {
+          final da = a.date, db = b.date;
+          if (da == null || db == null) return 0;
+          return db.compareTo(da);
+        });
+        recentPosts = all.take(5).toList();
+      }
+    } on DioException catch (e) {
+      // Fail silently on the landing page — the section just stays hidden.
+      ApiResponse errorResponse = ApiResponse.parse(e.response);
+      debugPrint("recent posts error: ${errorResponse.message}");
+    } catch (e) {
+      debugPrint("recent posts error: $e");
+    } finally {
+      recentPostsLoading = false;
+      rebuildUi();
+    }
   }
 
   getPics() async {

@@ -7,14 +7,20 @@ import 'package:frankoweb/ui/news/widget/post_detail_screen.dart';
 
 class PostPublicList extends StatelessWidget {
   final bool isLoading;
-  final List<Post> posts;
+  final List<Map<String, dynamic>> postsList;
   final bool isWide;
+  final bool isAdmin;
+  final void Function(int index)? onDeletePost;
+  final VoidCallback? onReload;
 
   const PostPublicList({
     super.key,
     required this.isLoading,
-    required this.posts,
+    required this.postsList,
     required this.isWide,
+    this.isAdmin = false,
+    this.onDeletePost,
+    this.onReload,
   });
 
   @override
@@ -64,12 +70,34 @@ class PostPublicList extends StatelessWidget {
                     ),
                   ),
                 )
-              : posts.isEmpty
-                  ? const SizedBox(
+              : postsList.isEmpty
+                  ? SizedBox(
                       height: 200,
                       child: Center(
-                        child: Text("No posts yet.",
-                            style: TextStyle(color: Colors.grey, fontSize: 15)),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text("No posts yet.",
+                                style: TextStyle(
+                                    color: Colors.grey, fontSize: 15)),
+                            if (onReload != null) ...[
+                              const SizedBox(height: 16),
+                              OutlinedButton.icon(
+                                onPressed: onReload,
+                                icon: const Icon(Icons.refresh, size: 18),
+                                label: const Text("Reload"),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: AppColors.gradient2,
+                                  side: const BorderSide(
+                                      color: AppColors.gradient2),
+                                  shape: const StadiumBorder(),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 24, vertical: 12),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
                     )
                   : Center(
@@ -77,9 +105,19 @@ class PostPublicList extends StatelessWidget {
                         spacing: 24,
                         runSpacing: 24,
                         alignment: WrapAlignment.center,
-                        children: posts
-                            .map((p) => _PostCard(post: p, isWide: isWide))
-                            .toList(),
+                        children: postsList.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final data = entry.value;
+                          return _PostCard(
+                            post: data['post'] as Post,
+                            isWide: isWide,
+                            isAdmin: isAdmin,
+                            isDeleting: data['loading'] == true,
+                            onDelete: onDeletePost != null
+                                ? () => onDeletePost!(index)
+                                : null,
+                          );
+                        }).toList(),
                       ),
                     ),
         ],
@@ -91,7 +129,17 @@ class PostPublicList extends StatelessWidget {
 class _PostCard extends StatefulWidget {
   final Post post;
   final bool isWide;
-  const _PostCard({required this.post, required this.isWide});
+  final bool isAdmin;
+  final bool isDeleting;
+  final VoidCallback? onDelete;
+
+  const _PostCard({
+    required this.post,
+    required this.isWide,
+    this.isAdmin = false,
+    this.isDeleting = false,
+    this.onDelete,
+  });
 
   @override
   State<_PostCard> createState() => _PostCardState();
@@ -138,46 +186,88 @@ class _PostCardState extends State<_PostCard> {
             Builder(builder: (context) {
               final url = "${Api.dataUrl}${widget.post.image}";
               debugPrint("PostCard image URL: $url");
-              return ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
-                child: Image.network(
-                  url,
-                  width: cardWidth,
-                  height: 180,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (_, child, progress) => progress == null
-                      ? child
-                      : Container(
-                          height: 180,
-                          color: Colors.grey[100],
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                                color: AppColors.gradient1, strokeWidth: 1),
-                          ),
+              return Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                    child: Image.network(
+                      url,
+                      width: cardWidth,
+                      height: 180,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (_, child, progress) => progress == null
+                          ? child
+                          : Container(
+                              height: 180,
+                              color: Colors.grey[100],
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                    color: AppColors.gradient1,
+                                    strokeWidth: 1),
+                              ),
+                            ),
+                      errorBuilder: (_, error, __) => Container(
+                        height: 180,
+                        color: Colors.grey[100],
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.broken_image_outlined,
+                                color: Colors.grey, size: 32),
+                            const SizedBox(height: 8),
+                            Text(
+                              url,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  color: Colors.red, fontSize: 11),
+                            ),
+                          ],
                         ),
-                  errorBuilder: (_, error, __) => Container(
-                    height: 180,
-                    color: Colors.grey[100],
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.broken_image_outlined,
-                            color: Colors.grey, size: 32),
-                        const SizedBox(height: 8),
-                        Text(
-                          url,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              color: Colors.red, fontSize: 11),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                  if (widget.isAdmin)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: widget.isDeleting
+                          ? Container(
+                              width: 30,
+                              height: 30,
+                              padding: const EdgeInsets.all(6),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const CircularProgressIndicator(
+                                  strokeWidth: 1.5,
+                                  color: AppColors.gradient2),
+                            )
+                          : InkWell(
+                              onTap: widget.onDelete,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(20)),
+                              child: Container(
+                                width: 30,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.9),
+                                  shape: BoxShape.circle,
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.black26, blurRadius: 4)
+                                  ],
+                                ),
+                                child: const Icon(Icons.delete_outline,
+                                    color: Colors.red, size: 16),
+                              ),
+                            ),
+                    ),
+                ],
               );
             }),
             Padding(

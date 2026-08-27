@@ -3,10 +3,11 @@ import 'package:frankoweb/app/locator.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
+import 'package:frankoweb/constants/routes.dart';
 import 'package:frankoweb/services/app.service.dart';
 import 'package:frankoweb/ui/big_screen/widgets/nav_menu_item.dart';
 import 'dart:html' as html;
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BigAppBar extends StatefulWidget {
   final VoidCallback aboutUsClicked;
@@ -154,6 +155,16 @@ class _BigAppBarState extends State<BigAppBar> {
                     },
                     width: 70,
                   ),
+                  const SizedBox(width: 5),
+                  NavMenuItem(
+                    title: 'Posts',
+                    selected: false,
+                    isScrolled: true,
+                    onTap: () {
+                      Navigator.of(context).pushNamed(Routes.postsScreen);
+                    },
+                    width: 80,
+                  ),
                 ],
               ),
             ),
@@ -178,8 +189,8 @@ class _BigAppBarState extends State<BigAppBar> {
                       ),
                       const SizedBox(width: 10),
                       InkWell(
-                        child: Icon(
-                          MdiIcons.linkedin,
+                        child: FaIcon(
+                          FontAwesomeIcons.linkedin,
                           size: 25,
                           color: AppColors.gradient2,
                         ),
@@ -191,8 +202,8 @@ class _BigAppBarState extends State<BigAppBar> {
                       ),
                       const SizedBox(width: 10),
                       InkWell(
-                        child: Icon(
-                          MdiIcons.instagram,
+                        child: FaIcon(
+                          FontAwesomeIcons.instagram,
                           size: 25,
                           color: AppColors.gradient2,
                         ),
@@ -313,8 +324,8 @@ class _BigAppBarState extends State<BigAppBar> {
                       ),
                       const SizedBox(width: 10),
                       InkWell(
-                        child: Icon(
-                          MdiIcons.linkedin,
+                        child: FaIcon(
+                          FontAwesomeIcons.linkedin,
                           size: 20,
                           color: AppColors.gradient2,
                         ),
@@ -326,8 +337,8 @@ class _BigAppBarState extends State<BigAppBar> {
                       ),
                       const SizedBox(width: 10),
                       InkWell(
-                        child: Icon(
-                          MdiIcons.instagram,
+                        child: FaIcon(
+                          FontAwesomeIcons.instagram,
                           size: 20,
                           color: AppColors.gradient2,
                         ),
@@ -357,6 +368,8 @@ class _BigAppBarState extends State<BigAppBar> {
                             widget.partnersClicked();
                           } else if (value == "team") {
                             widget.teamClicked();
+                          } else if (value == "posts") {
+                            Navigator.of(context).pushNamed(Routes.postsScreen);
                           }
                         },
                         itemBuilder: (context) => const [
@@ -390,6 +403,14 @@ class _BigAppBarState extends State<BigAppBar> {
                             child: SizedBox(
                               height: 50,
                               child: Center(child: Text("Team")),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "posts",
+                            padding: EdgeInsets.zero,
+                            child: SizedBox(
+                              height: 50,
+                              child: Center(child: Text("Posts")),
                             ),
                           ),
                         ],

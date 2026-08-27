@@ -53,13 +53,13 @@ class PostsApi extends BaseApi {
     return ApiResponse.parse(response);
   }
 
-  Future<ApiResponse> getPostComments(String postId) async {
-    var response = await get(url: "${Api.postComments}/$postId");
+  Future<ApiResponse> getPostComments(String postId, {int page = 1}) async {
+    var response = await get(url: "${Api.posts}/$postId/comments?page=$page");
     return ApiResponse.parse(response);
   }
 
-  Future<ApiResponse> addComment(dynamic params) async {
-    var response = await post(url: Api.postComments, data: params);
+  Future<ApiResponse> addComment(String postId, dynamic params) async {
+    var response = await post(url: "${Api.posts}/$postId/comments", data: params);
     return ApiResponse.parse(response);
   }
 
@@ -68,8 +68,8 @@ class PostsApi extends BaseApi {
     return ApiResponse.parse(response);
   }
 
-  Future<ApiResponse> likePost(dynamic params) async {
-    var response = await post(url: Api.postLikes, data: params);
+  Future<ApiResponse> likePost(String postId, dynamic params) async {
+    var response = await post(url: "${Api.posts}/$postId/like", data: params);
     return ApiResponse.parse(response);
   }
 }

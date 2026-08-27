@@ -1,14 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:frankoweb/app/locator.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
 import 'package:frankoweb/constants/routes.dart';
-import 'package:frankoweb/services/app.service.dart';
 import 'dart:html' as html;
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Footer extends StatefulWidget {
   const Footer({super.key});
@@ -99,8 +97,8 @@ class _FooterState extends State<Footer> {
                             Expanded(
                               child: Center(
                                 child: InkWell(
-                                  child: Icon(
-                                    MdiIcons.linkedin,
+                                  child: FaIcon(
+                                    FontAwesomeIcons.linkedin,
                                     size: 25,
                                     color: Colors.white,
                                   ),
@@ -115,8 +113,8 @@ class _FooterState extends State<Footer> {
                             Expanded(
                               child: Center(
                                 child: InkWell(
-                                  child: Icon(
-                                    MdiIcons.instagram,
+                                  child: FaIcon(
+                                    FontAwesomeIcons.instagram,
                                     size: 25,
                                     color: Colors.white,
                                   ),
@@ -239,25 +237,6 @@ class _FooterState extends State<Footer> {
                             },
                           ),
                           const SizedBox(height: 10),
-                          InkWell(
-                            child: const Text(
-                              "Documents",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 17),
-                            ),
-                            onTap: () async {
-                              Map<String, dynamic> data =
-                                  await locator<AppService>().getUser();
-                              if (data.isEmpty) {
-                                Navigator.of(context)
-                                    .pushNamed(Routes.accountScreen);
-                              } else {
-                                Navigator.of(context)
-                                    .pushNamed(Routes.documentScreen);
-                              }
-                            },
-                          ),
-                          const SizedBox(height: 10),
                           // InkWell(
                           //   child: const Text(
                           //     "Products",
@@ -371,8 +350,8 @@ class _FooterState extends State<Footer> {
                                   width: 10,
                                 ),
                                 InkWell(
-                                  child: Icon(
-                                    MdiIcons.linkedin,
+                                  child: FaIcon(
+                                    FontAwesomeIcons.linkedin,
                                     size: 25,
                                     color: Colors.white,
                                   ),
@@ -386,8 +365,8 @@ class _FooterState extends State<Footer> {
                                   width: 10,
                                 ),
                                 InkWell(
-                                  child: Icon(
-                                    MdiIcons.instagram,
+                                  child: FaIcon(
+                                    FontAwesomeIcons.instagram,
                                     size: 25,
                                     color: Colors.white,
                                   ),
@@ -518,25 +497,6 @@ class _FooterState extends State<Footer> {
                               onTap: () {
                                 Navigator.of(context)
                                     .pushNamed(Routes.partnersScreen);
-                              },
-                            ),
-                            const SizedBox(height: 10),
-                            InkWell(
-                              child: const Text(
-                                "Documents",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 17),
-                              ),
-                              onTap: () async {
-                                Map<String, dynamic> data =
-                                    await locator<AppService>().getUser();
-                                if (data.isEmpty) {
-                                  Navigator.of(context)
-                                      .pushNamed(Routes.accountScreen);
-                                } else {
-                                  Navigator.of(context)
-                                      .pushNamed(Routes.documentScreen);
-                                }
                               },
                             ),
                             const SizedBox(height: 10),

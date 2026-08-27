@@ -3,20 +3,16 @@ import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
 
-class PostsAppBar extends StatelessWidget {
+class DocsAppBar extends StatelessWidget {
   final bool isScrolled;
   final bool isWide;
   final VoidCallback onHomeTap;
-  final String? subLabel;
-  final VoidCallback? onPostsTap;
 
-  const PostsAppBar({
+  const DocsAppBar({
     super.key,
     required this.isScrolled,
     required this.isWide,
     required this.onHomeTap,
-    this.subLabel,
-    this.onPostsTap,
   });
 
   @override
@@ -102,36 +98,15 @@ class PostsAppBar extends StatelessWidget {
                 const SizedBox(width: 8),
                 Icon(Icons.chevron_right, size: 16, color: fgMuted),
                 const SizedBox(width: 8),
-                InkWell(
-                  onTap: subLabel != null ? onPostsTap : null,
-                  child: AnimatedDefaultTextStyle(
-                    duration: const Duration(milliseconds: 300),
-                    style: TextStyle(
-                      color: subLabel != null ? fgMuted : fgColor,
-                      fontFamily: subLabel != null
-                          ? AppFonts.poppinsLight
-                          : AppFonts.poppinsBold,
-                      fontSize: subLabel != null
-                          ? (isWide ? 16 : 13)
-                          : (isWide ? 22 : 16),
-                    ),
-                    child: const Text("Posts"),
+                AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 300),
+                  style: TextStyle(
+                    color: fgColor,
+                    fontFamily: AppFonts.poppinsBold,
+                    fontSize: isWide ? 22 : 16,
                   ),
+                  child: const Text("Library"),
                 ),
-                if (subLabel != null) ...[
-                  const SizedBox(width: 8),
-                  Icon(Icons.chevron_right, size: 16, color: fgMuted),
-                  const SizedBox(width: 8),
-                  AnimatedDefaultTextStyle(
-                    duration: const Duration(milliseconds: 300),
-                    style: TextStyle(
-                      color: fgColor,
-                      fontFamily: AppFonts.poppinsBold,
-                      fontSize: isWide ? 22 : 16,
-                    ),
-                    child: Text(subLabel!),
-                  ),
-                ],
               ],
             ),
           ),

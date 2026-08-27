@@ -6,6 +6,7 @@ import 'package:frankoweb/constants/api.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
+import 'package:frankoweb/constants/routes.dart';
 import 'package:frankoweb/models/news.dart';
 import 'package:frankoweb/services/app.service.dart';
 import 'package:intl/intl.dart';
@@ -29,8 +30,12 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   bool _liking = false;
   int _likesCount = 0;
   bool _loadingComments = false;
+  bool _loadingMoreComments = false;
   bool _submittingComment = false;
   List<Comment> _comments = [];
+  int _totalComments = 0;
+  int _currentPage = 1;
+  bool _hasMorePages = false;
   String _currentUserId = '';
 
   @override
@@ -40,6 +45,14 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     _scrollController.addListener(() {
       final scrolled = _scrollController.offset > 80;
       if (scrolled != _isScrolled) setState(() => _isScrolled = scrolled);
+
+      final pos = _scrollController.position;
+      if (pos.pixels >= pos.maxScrollExtent - 250 &&
+          _hasMorePages &&
+          !_loadingMoreComments &&
+          !_loadingComments) {
+        _loadComments(page: _currentPage + 1);
+      }
     });
     _init();
   }
@@ -50,19 +63,42 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     _loadComments();
   }
 
-  Future<void> _loadComments() async {
-    setState(() => _loadingComments = true);
+  Future<void> _loadComments({int page = 1}) async {
+    debugPrint("Load comments called");
+    if (page == 1) {
+      setState(() => _loadingComments = true);
+    } else {
+      setState(() => _loadingMoreComments = true);
+    }
     try {
-      final res = await _api.getPostComments(widget.post.id.toString());
+      final res = await _api.getPostComments(
+        widget.post.id.toString(),
+        page: page,
+      );
       if (res.ok) {
-        final data = res.data as List<dynamic>;
+        final envelope = res.body as Map<String, dynamic>;
+
+        final paginated = envelope['comments'] as Map<String, dynamic>;
+        final items = (paginated['data'] as List<dynamic>)
+            .map((e) => Comment.fromJson(e))
+            .toList();
         setState(() {
-          _comments = data.map((e) => Comment.fromJson(e)).toList();
+          if (page == 1) {
+            _comments = items;
+          } else {
+            _comments = [..._comments, ...items];
+          }
+          _currentPage = paginated['current_page'] ?? 1;
+          _hasMorePages = paginated['next_page_url'] != null;
+          _totalComments = envelope['comments_count'] ?? _comments.length;
         });
       }
     } on DioException catch (_) {
     } finally {
-      setState(() => _loadingComments = false);
+      setState(() {
+        _loadingComments = false;
+        _loadingMoreComments = false;
+      });
     }
   }
 
@@ -70,10 +106,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     if (_liking || _currentUserId.isEmpty) return;
     setState(() => _liking = true);
     try {
-      final res = await _api.likePost({
-        'post_id': widget.post.id,
-        'user_id': _currentUserId,
-      });
+      final res = await _api.likePost(
+        widget.post.id.toString(),
+        {'user_id': _currentUserId},
+      );
       if (res.ok) {
         setState(() {
           _liked = !_liked;
@@ -91,14 +127,13 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     if (text.isEmpty || _submittingComment || _currentUserId.isEmpty) return;
     setState(() => _submittingComment = true);
     try {
-      final res = await _api.addComment({
-        'post_id': widget.post.id,
-        'user_id': _currentUserId,
-        'body': text,
-      });
+      final res = await _api.addComment(
+        widget.post.id.toString(),
+        {'user_id': _currentUserId, 'body': text},
+      );
       if (res.ok) {
         _commentController.clear();
-        _loadComments();
+        _loadComments(page: 1);
       }
     } on DioException catch (_) {
     } finally {
@@ -127,9 +162,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                hasImage
-                    ? _buildImageHero(isWide)
-                    : _buildGradientHero(isWide),
+                hasImage ? _buildImageHero(isWide) : _buildGradientHero(isWide),
                 _buildContent(isWide),
                 _buildEngagement(isWide),
                 _buildComments(isWide),
@@ -145,9 +178,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
   Widget _buildHeader(BuildContext context, bool isWide) {
     final fgColor = _isScrolled ? AppColors.gradient2 : Colors.white;
-    final fgMuted = _isScrolled
-        ? AppColors.gradient2.withValues(alpha: 0.6)
-        : Colors.white70;
+    final fgMuted =
+        _isScrolled ? AppColors.gradient2.withValues(alpha: 0.6) : Colors.white;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
@@ -254,9 +286,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           Image.network(
             "${Api.dataUrl}${widget.post.image}",
             fit: BoxFit.cover,
-            loadingBuilder: (_, child, progress) => progress == null
-                ? child
-                : Container(color: Colors.grey[200]),
+            loadingBuilder: (_, child, progress) =>
+                progress == null ? child : Container(color: Colors.grey[200]),
             errorBuilder: (_, __, ___) =>
                 Container(color: const Color(0xFFEEEEEE)),
           ),
@@ -381,16 +412,13 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         Text(
           widget.post.user?.name ?? "Frankatson",
           style: TextStyle(
-              color: color,
-              fontFamily: AppFonts.poppinsMedium,
-              fontSize: 13),
+              color: color, fontFamily: AppFonts.poppinsMedium, fontSize: 13),
         ),
         if (date.isNotEmpty) ...[
           const SizedBox(width: 16),
           Icon(Icons.calendar_today_outlined, size: 13, color: color),
           const SizedBox(width: 5),
-          Text(date,
-              style: TextStyle(color: color, fontSize: 13)),
+          Text(date, style: TextStyle(color: color, fontSize: 13)),
         ],
       ],
     );
@@ -449,26 +477,26 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     return Container(
       width: double.infinity,
       color: const Color(0xFFF8F8F8),
-      padding: EdgeInsets.symmetric(
-          horizontal: isWide ? 80 : 24, vertical: 24),
+      padding: EdgeInsets.symmetric(horizontal: isWide ? 80 : 24, vertical: 24),
       child: Row(
         children: [
-          _LikeButton(
-            liked: _liked,
-            liking: _liking,
-            count: _likesCount,
-            onTap: _currentUserId.isNotEmpty ? _toggleLike : null,
-          ),
-          const SizedBox(width: 24),
+          if (_currentUserId.isNotEmpty) ...[
+            _LikeButton(
+              liked: _liked,
+              liking: _liking,
+              count: _likesCount,
+              onTap: _toggleLike,
+            ),
+            const SizedBox(width: 24),
+          ],
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.chat_bubble_outline,
-                  size: 20,
-                  color: AppColors.gradient2.withValues(alpha: 0.6)),
+                  size: 20, color: AppColors.gradient2.withValues(alpha: 0.6)),
               const SizedBox(width: 6),
               Text(
-                "${_comments.length}",
+                "$_totalComments",
                 style: TextStyle(
                   color: AppColors.gradient2.withValues(alpha: 0.8),
                   fontFamily: AppFonts.poppinsMedium,
@@ -513,8 +541,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             ),
           ),
           const SizedBox(height: 24),
-          if (_currentUserId.isNotEmpty) _buildCommentForm(isWide),
-          if (_currentUserId.isNotEmpty) const SizedBox(height: 28),
+          _currentUserId.isNotEmpty
+              ? _buildCommentForm(isWide)
+              : _buildLoginPrompt(),
+          const SizedBox(height: 28),
           _loadingComments
               ? const Center(
                   child: Padding(
@@ -531,13 +561,26 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                         style: TextStyle(color: Colors.grey[400], fontSize: 14),
                       ),
                     )
-                  : ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _comments.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1),
-                      itemBuilder: (_, i) =>
-                          _CommentTile(comment: _comments[i]),
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: _comments.length,
+                          separatorBuilder: (_, __) => const Divider(height: 1),
+                          itemBuilder: (_, i) =>
+                              _CommentTile(comment: _comments[i]),
+                        ),
+                        if (_loadingMoreComments)
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                  color: AppColors.gradient2, strokeWidth: 2),
+                            ),
+                          ),
+                      ],
                     ),
         ],
       ),
@@ -562,11 +605,13 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
-                borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
+                borderSide:
+                    BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
-                borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
+                borderSide:
+                    BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
               ),
               focusedBorder: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -603,6 +648,52 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildLoginPrompt() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8F8F8),
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.15)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.chat_bubble_outline,
+              size: 20, color: AppColors.gradient2),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              "Login to leave a comment",
+              style: TextStyle(color: Colors.grey[600], fontSize: 14),
+            ),
+          ),
+          InkWell(
+            onTap: () async {
+              await Navigator.of(context).pushNamed(Routes.accountScreen);
+              if (mounted) _init();
+            },
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [AppColors.gradient1, AppColors.gradient2]),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+              child: const Text(
+                "Login",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: AppFonts.poppinsMedium,
+                    fontSize: 13),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -725,8 +816,7 @@ class _CommentTile extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         DateFormat.yMMMd().format(comment.createdAt!),
-                        style:
-                            TextStyle(fontSize: 11, color: Colors.grey[400]),
+                        style: TextStyle(fontSize: 11, color: Colors.grey[400]),
                       ),
                     ],
                   ],

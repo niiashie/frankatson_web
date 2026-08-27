@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:frankoweb/app/locator.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
-import 'package:frankoweb/models/news.dart';
-import 'package:frankoweb/services/app.service.dart';
+import 'package:frankoweb/ui/news/add_post_view.dart';
 import 'package:frankoweb/ui/news/news_view_model.dart';
-import 'package:frankoweb/ui/news/widget/post_create_form.dart';
 import 'package:frankoweb/ui/news/widget/post_public_list.dart';
 import 'package:frankoweb/ui/news/widget/posts_app_bar.dart';
-import 'package:frankoweb/ui/news/widget/posts_manage_table.dart';
 import 'package:stacked/stacked.dart';
+// PostsManageTable is no longer used — admin post management now happens
+// inline via delete icons on PostPublicList cards and a dedicated Add Post page.
+// import 'package:frankoweb/ui/news/widget/posts_manage_table.dart';
 
 class PostsView extends StackedView<PostsViewModel> {
   const PostsView({Key? key}) : super(key: key);
@@ -40,42 +39,23 @@ class PostsView extends StackedView<PostsViewModel> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHero(isWide),
-                Visibility(
-                  visible: !viewModel.showManagesPosts,
-                  child: PostPublicList(
-                    isLoading: viewModel.getPostsLoading,
-                    posts: viewModel.postsList
-                        .map((e) => e['post'] as Post)
-                        .toList(),
-                    isWide: isWide,
-                  ),
+                PostPublicList(
+                  isLoading: viewModel.getPostsLoading,
+                  postsList: viewModel.postsList,
+                  isWide: isWide,
+                  isAdmin: viewModel.isAdmin,
+                  onDeletePost: viewModel.deletePost,
+                  onReload: viewModel.getPosts,
                 ),
-                Visibility(
-                  visible: viewModel.showManagesPosts,
-                  child: Visibility(
-                    visible: !viewModel.showAddPost,
-                    replacement: PostCreateForm(
-                      formKey: viewModel.postKey,
-                      titleController: viewModel.title,
-                      descriptionController: viewModel.description,
-                      contentController: viewModel.content,
-                      hasFile: viewModel.file != null,
-                      bytesData: viewModel.bytesData,
-                      isLoading: viewModel.createPostLoading,
-                      onPickFile: viewModel.pickFile,
-                      onClearImage: viewModel.clearSelectedImage,
-                      onSubmit: viewModel.createPost,
-                      onBack: viewModel.backToPosts,
-                    ),
-                    child: PostsManageTable(
-                      postsList: viewModel.postsList,
-                      isLoading: viewModel.getPostsLoading,
-                      onAddPost: viewModel.displayAddPost,
-                      onDeletePost: viewModel.deletePost,
-                      onBack: viewModel.backToPosts,
-                    ),
-                  ),
-                ),
+                // Manage-posts table replaced by inline delete icons above
+                // and the dedicated Add Post page.
+                // PostsManageTable(
+                //   postsList: viewModel.postsList,
+                //   isLoading: viewModel.getPostsLoading,
+                //   onAddPost: () {},
+                //   onDeletePost: viewModel.deletePost,
+                //   onBack: () {},
+                // ),
                 const SizedBox(height: 60),
               ],
             ),
@@ -87,31 +67,21 @@ class PostsView extends StackedView<PostsViewModel> {
           ),
         ],
       ),
-      floatingActionButton: MediaQuery.of(context).size.width >= 800
-          ? FutureBuilder(
-              future: locator<AppService>().getUser(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.hasError) return const SizedBox();
-                  if (snapshot.hasData &&
-                      snapshot.data!.isNotEmpty &&
-                      snapshot.data!['role'] == "admin") {
-                    return Visibility(
-                      visible: !viewModel.showAddPost,
-                      child: FloatingActionButton.extended(
-                        backgroundColor: AppColors.gradient2,
-                        onPressed: viewModel.displayManagePosts,
-                        icon: const Icon(Icons.tune, color: Colors.white),
-                        label: const Text("Manage Posts",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: AppFonts.poppinsMedium)),
-                      ),
-                    );
-                  }
-                }
-                return const SizedBox();
-              })
+      floatingActionButton: MediaQuery.of(context).size.width >= 800 &&
+              viewModel.isAdmin
+          ? FloatingActionButton.extended(
+              backgroundColor: AppColors.gradient2,
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => AddPostView(viewModel: viewModel),
+                ),
+              ),
+              icon: const Icon(Icons.add, color: Colors.white),
+              label: const Text("Add Post",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: AppFonts.poppinsMedium)),
+            )
           : const SizedBox(),
     );
   }

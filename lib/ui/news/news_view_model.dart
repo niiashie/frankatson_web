@@ -15,10 +15,8 @@ import '../../../services/dialog.service.dart' as dialog;
 import 'dart:html' as html;
 
 class PostsViewModel extends BaseViewModel {
-  bool showManagesPosts = false,
-      showAddPost = false,
-      createPostLoading = false,
-      getPostsLoading = false;
+  bool createPostLoading = false, getPostsLoading = false;
+  bool isAdmin = false;
   TextEditingController? title, content, description;
   html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
   final GlobalKey<FormState> postKey = GlobalKey<FormState>();
@@ -34,7 +32,7 @@ class PostsViewModel extends BaseViewModel {
   ScrollController scrollController = ScrollController();
   bool isScrolled = false;
 
-  init() {
+  init() async {
     title = TextEditingController(text: "");
     content = TextEditingController(text: "");
     description = TextEditingController(text: "");
@@ -42,18 +40,10 @@ class PostsViewModel extends BaseViewModel {
       isScrolled = scrollController.offset > 80;
       rebuildUi();
     });
+    final user = await appService.getUser();
+    isAdmin = user.isNotEmpty && user['role'] == "admin";
+    rebuildUi();
     getPosts();
-  }
-
-  displayManagePosts() {
-    showManagesPosts = true;
-    rebuildUi();
-  }
-
-  backToPosts() {
-    showManagesPosts = false;
-    showAddPost = false;
-    rebuildUi();
   }
 
   getPosts() async {
@@ -119,7 +109,7 @@ class PostsViewModel extends BaseViewModel {
     }
   }
 
-  createPost() async {
+  createPost({VoidCallback? onSuccess}) async {
     if (postKey.currentState!.validate()) {
       if (file != null) {
         FormData data = FormData.fromMap({
@@ -142,6 +132,7 @@ class PostsViewModel extends BaseViewModel {
             createPostLoading = false;
             reset();
             getPosts();
+            onSuccess?.call();
           }
         } on DioException catch (e) {
           createPostLoading = false;
@@ -191,10 +182,5 @@ class PostsViewModel extends BaseViewModel {
         reader.readAsDataUrl(file!);
       }
     });
-  }
-
-  displayAddPost() {
-    showAddPost = true;
-    rebuildUi();
   }
 }

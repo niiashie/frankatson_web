@@ -12,6 +12,7 @@ import 'dart:html' as html;
 
 class DocViewModel extends BaseViewModel {
   bool showAddDocument = false, getDocumentLoading = false;
+  bool isAdmin = false;
   var appService = locator<AppService>();
   final GlobalKey<FormState> docKey = GlobalKey<FormState>();
   TextEditingController title = TextEditingController(text: "");
@@ -23,13 +24,24 @@ class DocViewModel extends BaseViewModel {
   List<int>? selectedFile;
   Uint8List? bytesData;
   bool uploadDocumentLoading = false;
+  ScrollController scrollController = ScrollController();
+  bool isScrolled = false;
 
   viewAddDocument() {
     showAddDocument = true;
     rebuildUi();
   }
 
+  backToDocuments() {
+    showAddDocument = false;
+    rebuildUi();
+  }
+
   init() {
+    scrollController.addListener(() {
+      isScrolled = scrollController.offset > 80;
+      rebuildUi();
+    });
     getUser();
     getDocument();
   }
@@ -38,6 +50,8 @@ class DocViewModel extends BaseViewModel {
     Map<String, dynamic> user = await locator<AppService>().getUser();
     if (user.isNotEmpty) {
       postedBy = user['id'];
+      isAdmin = user['role'] == "admin";
+      rebuildUi();
     }
   }
 

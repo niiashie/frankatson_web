@@ -8,7 +8,9 @@ import 'package:frankoweb/ui/big_screen/widgets/core_team_section.dart';
 import 'package:frankoweb/ui/big_screen/widgets/gallery_section.dart';
 import 'package:frankoweb/ui/big_screen/widgets/hero_section.dart';
 import 'package:frankoweb/ui/big_screen/widgets/partners_section.dart';
+import 'package:frankoweb/ui/big_screen/widgets/recent_posts_section.dart';
 import 'package:frankoweb/ui/big_screen/widgets/services_section.dart';
+import 'package:frankoweb/ui/news/widget/post_detail_screen.dart';
 import 'package:frankoweb/ui/shared/big_app_bar.dart';
 import 'package:frankoweb/ui/shared/footer.dart';
 import 'package:stacked/stacked.dart';
@@ -60,6 +62,17 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                   ),
                   CoreTeamSection(sectionKey: viewModel.key4),
                   GallerySection(images: viewModel.galleryImages),
+                  RecentPostsSection(
+                    posts: viewModel.recentPosts,
+                    isLoading: viewModel.recentPostsLoading,
+                    onViewAll: () => Navigator.of(context)
+                        .pushNamed(Routes.postsScreen),
+                    onPostTap: (post) => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => PostDetailScreen(post: post),
+                      ),
+                    ),
+                  ),
                   ContactSection(sectionKey: viewModel.key5),
                   const Footer(),
                 ],
