@@ -2,8 +2,8 @@ class Api {
   static const int connectionTimeout = 35;
   static const int receiveTimeout = 20;
   static String baseUrl =
-      "http://frankowebbackend.test/api"; //"https://webapi.com.frankatsongh.com/api";
-  static String dataUrl = "http://frankowebbackend.test";
+      "https://api.frankatsongh.com/api"; //"https://webapi.com.frankatsongh.com/api";
+  static String dataUrl = "https://api.frankatsongh.com/";
   // "https://webapi.com.frankatsongh.com"; //https://webapi.com.frankatsongh.com
   static const auth = "/auth";
   static const login = "$auth/login";

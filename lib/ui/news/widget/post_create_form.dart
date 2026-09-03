@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
+import 'package:frankoweb/ui/news/widget/cover_video_preview.dart';
 import 'package:frankoweb/ui/shared/custom_button.dart';
 import 'package:frankoweb/ui/shared/custom_form_field.dart';
 
@@ -14,6 +15,10 @@ class PostCreateForm extends StatelessWidget {
   final TextEditingController? contentController;
   final bool hasFile;
   final Uint8List? bytesData;
+  final bool isVideo;
+  final String? fileName;
+  final String? fileSizeLabel;
+  final String? videoUrl;
   final bool isLoading;
   final VoidCallback onPickFile;
   final VoidCallback onClearImage;
@@ -28,6 +33,10 @@ class PostCreateForm extends StatelessWidget {
     required this.contentController,
     required this.hasFile,
     required this.bytesData,
+    this.isVideo = false,
+    this.fileName,
+    this.fileSizeLabel,
+    this.videoUrl,
     required this.isLoading,
     required this.onPickFile,
     required this.onClearImage,
@@ -156,9 +165,13 @@ class PostCreateForm extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 16),
-                    _ImagePicker(
+                    _CoverMediaPicker(
                       hasFile: hasFile,
                       bytesData: bytesData,
+                      isVideo: isVideo,
+                      fileName: fileName,
+                      fileSizeLabel: fileSizeLabel,
+                      videoUrl: videoUrl,
                       onPickFile: onPickFile,
                       onClearImage: onClearImage,
                     ),
@@ -210,15 +223,23 @@ class PostCreateForm extends StatelessWidget {
   }
 }
 
-class _ImagePicker extends StatelessWidget {
+class _CoverMediaPicker extends StatelessWidget {
   final bool hasFile;
   final Uint8List? bytesData;
+  final bool isVideo;
+  final String? fileName;
+  final String? fileSizeLabel;
+  final String? videoUrl;
   final VoidCallback onPickFile;
   final VoidCallback onClearImage;
 
-  const _ImagePicker({
+  const _CoverMediaPicker({
     required this.hasFile,
     required this.bytesData,
+    required this.isVideo,
+    required this.fileName,
+    required this.fileSizeLabel,
+    required this.videoUrl,
     required this.onPickFile,
     required this.onClearImage,
   });
@@ -230,11 +251,16 @@ class _ImagePicker extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          "Cover Image",
+          "Cover Image or Video",
           style: TextStyle(
               color: Colors.grey,
               fontSize: 12,
               fontFamily: AppFonts.poppinsMedium),
+        ),
+        const SizedBox(height: 4),
+        const Text(
+          "Upload an image or a video — max 100 MB",
+          style: TextStyle(color: Colors.grey, fontSize: 11),
         ),
         const SizedBox(height: 8),
         if (hasFile) ...[
@@ -242,12 +268,46 @@ class _ImagePicker extends StatelessWidget {
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             child: Stack(
               children: [
-                Image.memory(
-                  bytesData!,
-                  width: double.infinity,
-                  height: 140,
-                  fit: BoxFit.cover,
-                ),
+                if (isVideo && videoUrl != null)
+                  CoverVideoPreview(src: videoUrl!)
+                else if (isVideo || bytesData == null)
+                  Container(
+                    width: double.infinity,
+                    height: 140,
+                    color: const Color(0xFFF1F1F1),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          isVideo
+                              ? Icons.movie_creation_outlined
+                              : Icons.image_outlined,
+                          size: 34,
+                          color: AppColors.gradient2,
+                        ),
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(
+                            fileName ??
+                                (isVideo ? "Video selected" : "File selected"),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.black87),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  Image.memory(
+                    bytesData!,
+                    width: double.infinity,
+                    height: 140,
+                    fit: BoxFit.cover,
+                  ),
                 Positioned(
                   top: 8,
                   right: 8,
@@ -267,20 +327,45 @@ class _ImagePicker extends StatelessWidget {
               ],
             ),
           ),
+          if (isVideo && videoUrl != null) ...[
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                const Icon(Icons.play_circle_outline,
+                    size: 14, color: AppColors.gradient2),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    "Play the video to confirm it's the right one before publishing.",
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: AppColors.gradient2.withValues(alpha: 0.9)),
+                  ),
+                ),
+              ],
+            ),
+          ],
+          if (fileSizeLabel != null && fileSizeLabel!.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(
+              "${isVideo ? 'Video' : 'Image'} · ${fileSizeLabel!}",
+              style: const TextStyle(fontSize: 11, color: Colors.grey),
+            ),
+          ],
           const SizedBox(height: 10),
         ],
         CustomButton(
           color: AppColors.gradient1,
           height: 40,
-          width: 150,
+          width: 180,
           elevation: 1,
           ontap: onPickFile,
           title: const Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.camera_alt_outlined, size: 14, color: Colors.white),
+              Icon(Icons.perm_media_outlined, size: 14, color: Colors.white),
               SizedBox(width: 6),
-              Text("Select Image",
+              Text("Select Image / Video",
                   style: TextStyle(color: Colors.white, fontSize: 13)),
             ],
           ),

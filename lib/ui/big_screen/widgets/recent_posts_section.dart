@@ -1,9 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:frankoweb/constants/api.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/models/news.dart';
+import 'package:frankoweb/ui/news/widget/post_cover.dart';
 import 'package:intl/intl.dart';
 
 /// A "Latest News" teaser carousel for the landing page.
@@ -138,8 +138,6 @@ class _PostSlide extends StatefulWidget {
 class _PostSlideState extends State<_PostSlide> {
   bool _hovered = false;
 
-  String get _imageUrl => "${Api.dataUrl}${widget.post.image ?? ''}";
-
   String get _dateLabel => widget.post.date != null
       ? DateFormat.yMMMd().format(widget.post.date!)
       : "";
@@ -223,22 +221,12 @@ class _PostSlideState extends State<_PostSlide> {
       width: double.infinity,
       height: double.infinity,
       color: Colors.grey[100],
-      child: Image.network(
-        _imageUrl,
-        // Show the whole image — no cropping — within the available box.
+      child: PostCover(
+        imagePath: widget.post.image,
         fit: BoxFit.fill,
         width: double.infinity,
         height: double.infinity,
-        loadingBuilder: (_, child, progress) => progress == null
-            ? child
-            : const Center(
-                child: CircularProgressIndicator(
-                    color: AppColors.gradient1, strokeWidth: 1.5),
-              ),
-        errorBuilder: (_, __, ___) => const Center(
-          child: Icon(Icons.image_not_supported_outlined,
-              color: Colors.grey, size: 32),
-        ),
+        playButtonSize: 52,
       ),
     );
   }

@@ -9,6 +9,9 @@ import 'package:frankoweb/constants/images.dart';
 import 'package:frankoweb/constants/routes.dart';
 import 'package:frankoweb/models/news.dart';
 import 'package:frankoweb/services/app.service.dart';
+import 'package:frankoweb/ui/news/widget/cover_video_preview.dart';
+import 'package:frankoweb/ui/news/widget/post_cover.dart';
+import 'package:frankoweb/utils/video_thumbnail.dart';
 import 'package:intl/intl.dart';
 
 class PostDetailScreen extends StatefulWidget {
@@ -37,9 +40,49 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   int _currentPage = 1;
   bool _hasMorePages = false;
   String _currentUserId = '';
+  bool _playCoverVideo = false;
+  bool _videoReady = false;
+  Offset? _heroPointerDownPos;
+
+  bool get _isVideoCover => isVideoUrl(widget.post.image);
+  String get _coverUrl => "${Api.dataUrl}${widget.post.image}";
+
+  void _startCoverVideo() {
+    debugPrint(
+        '[PostDetail] _startCoverVideo() — playing cover video: $_coverUrl');
+    setState(() {
+      _playCoverVideo = true;
+      _videoReady = false;
+    });
+    // Safety net: if the video never signals "ready" (404 / blocked), reveal
+    // the element anyway so the browser's own error/controls are visible
+    // instead of an endless spinner.
+    Future.delayed(const Duration(seconds: 20), () {
+      if (mounted && _playCoverVideo && !_videoReady) {
+        debugPrint(
+            '[PostDetail] cover video ready-timeout — revealing element');
+        setState(() => _videoReady = true);
+      }
+    });
+  }
+
+  void _stopCoverVideo() {
+    debugPrint('[PostDetail] _stopCoverVideo()');
+    setState(() {
+      _playCoverVideo = false;
+      _videoReady = false;
+    });
+  }
+
+  void _onCoverVideoReady() {
+    debugPrint('[PostDetail] _onCoverVideoReady()');
+    if (!mounted || _videoReady) return;
+    setState(() => _videoReady = true);
+  }
 
   @override
   void initState() {
+    debugPrint("Is it a video cover  : $_isVideoCover");
     super.initState();
     _likesCount = widget.post.likesCount;
     _scrollController.addListener(() {
@@ -58,6 +101,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   Future<void> _init() async {
+    // if (_isVideoCover) {
+    //   _startCoverVideo();
+    // }
     final user = await _appService.getUser();
     if (user.isNotEmpty) _currentUserId = user['id'] ?? '';
     _loadComments();
@@ -153,27 +199,39 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     final isWide = MediaQuery.of(context).size.width >= 800;
     final hasImage = widget.post.image != null && widget.post.image!.isNotEmpty;
 
+    final playingVideo = _isVideoCover && _playCoverVideo;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: playingVideo ? Colors.black : Colors.white,
       body: Stack(
         children: [
           SingleChildScrollView(
             controller: _scrollController,
+            physics: playingVideo ? const NeverScrollableScrollPhysics() : null,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 hasImage ? _buildImageHero(isWide) : _buildGradientHero(isWide),
-                _buildContent(isWide),
-                _buildEngagement(isWide),
-                _buildComments(isWide),
-                const SizedBox(height: 60),
+                // Everything below the hero is hidden while the video plays.
+                if (!playingVideo) ...[
+                  _buildContent(isWide),
+                  _buildEngagement(isWide),
+                  _buildComments(isWide),
+                  const SizedBox(height: 60),
+                ],
               ],
             ),
           ),
-          _buildHeader(context, isWide),
+          if (!playingVideo) _buildHeader(context, isWide),
         ],
       ),
     );
+  }
+
+  double _heroHeight(bool isWide) {
+    if (_isVideoCover && _playCoverVideo) return isWide ? 640 : 360;
+    if (_isVideoCover) return isWide ? 520 : 320;
+    return isWide ? 460 : 280;
   }
 
   Widget _buildHeader(BuildContext context, bool isWide) {
@@ -277,12 +335,24 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   Widget _buildImageHero(bool isWide) {
-    return SizedBox(
-      width: double.infinity,
-      height: isWide ? 460 : 280,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
+    if (_isVideoCover && _playCoverVideo) {
+      return SizedBox(
+        width: double.infinity,
+        height: _heroHeight(isWide),
+        child: _buildInlineVideo(isWide),
+      );
+    }
+
+    final heroStack = Stack(
+      fit: StackFit.expand,
+      children: [
+        if (_isVideoCover)
+          PostCover(
+            imagePath: widget.post.image,
+            fit: BoxFit.cover,
+            playButtonSize: isWide ? 74 : 58,
+          )
+        else
           Image.network(
             "${Api.dataUrl}${widget.post.image}",
             fit: BoxFit.cover,
@@ -291,23 +361,24 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             errorBuilder: (_, __, ___) =>
                 Container(color: const Color(0xFFEEEEEE)),
           ),
-          Container(
+        // Scrim — ignore pointers so it can't swallow taps.
+        const IgnorePointer(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  Colors.black.withValues(alpha: 0.65),
-                ],
-                stops: const [0.4, 1.0],
+                colors: [Colors.transparent, Colors.black87],
+                stops: [0.4, 1.0],
               ),
             ),
           ),
-          Positioned(
-            left: isWide ? 80 : 24,
-            right: isWide ? 80 : 24,
-            bottom: 36,
+        ),
+        Positioned(
+          left: isWide ? 80 : 24,
+          right: isWide ? 80 : 24,
+          bottom: 36,
+          child: IgnorePointer(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -332,7 +403,118 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               ],
             ),
           ),
+        ),
+      ],
+    );
+
+    if (!_isVideoCover) {
+      return SizedBox(
+        width: double.infinity,
+        height: _heroHeight(isWide),
+        child: heroStack,
+      );
+    }
+
+    // Drive the tap straight off raw pointer events — this fires during event
+    // dispatch, independent of the gesture arena, so a parent scroll view or a
+    // nested Stack/Center can't "lose" it.
+    return SizedBox(
+      width: double.infinity,
+      height: _heroHeight(isWide),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Listener(
+          behavior: HitTestBehavior.opaque,
+          onPointerDown: (e) {
+            _heroPointerDownPos = e.position;
+            debugPrint('[PostDetail] hero pointer DOWN @ ${e.localPosition}');
+          },
+          onPointerUp: (e) {
+            final start = _heroPointerDownPos;
+            _heroPointerDownPos = null;
+            debugPrint('[PostDetail] hero pointer UP (start=$start)');
+            if (start == null) return;
+            if ((e.position - start).distance > 12) return; // scroll / drag
+            if (_playCoverVideo) return;
+            debugPrint('[PostDetail] hero tap -> starting video');
+            _startCoverVideo();
+          },
+          child: heroStack,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInlineVideo(bool isWide) {
+    return Container(
+      color: Colors.black,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            height: 44,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: InkWell(
+                  onTap: _stopCoverVideo,
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.close, color: Colors.white, size: 18),
+                      SizedBox(width: 6),
+                      Text("Close video",
+                          style: TextStyle(color: Colors.white, fontSize: 12)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Always mounted so it actually loads + autoplays. The loading
+                // circle sits on top until the video signals it can play.
+                CoverVideoPreview(
+                  src: _coverUrl,
+                  height: null,
+                  autoPlay: true,
+                  onReady: _onCoverVideoReady,
+                ),
+                if (!_videoReady)
+                  Container(
+                    color: Colors.black,
+                    alignment: Alignment.center,
+                    child: _videoLoadingCircle(isWide ? 74 : 58),
+                  ),
+              ],
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _videoLoadingCircle(double size) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: const BoxDecoration(
+        color: AppColors.primaryColor,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(color: Colors.black38, blurRadius: 12, spreadRadius: 1),
+        ],
+      ),
+      alignment: Alignment.center,
+      child: SizedBox(
+        width: size * 0.5,
+        height: size * 0.5,
+        child: const CircularProgressIndicator(
+            color: Colors.white, strokeWidth: 2.5),
       ),
     );
   }

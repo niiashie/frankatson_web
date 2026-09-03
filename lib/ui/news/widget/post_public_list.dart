@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frankoweb/constants/api.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/models/news.dart';
+import 'package:frankoweb/ui/news/widget/post_cover.dart';
 import 'package:frankoweb/ui/news/widget/post_detail_screen.dart';
 
 class PostPublicList extends StatelessWidget {
@@ -184,8 +184,6 @@ class _PostCardState extends State<_PostCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Builder(builder: (context) {
-              final url = "${Api.dataUrl}${widget.post.image}";
-              debugPrint("PostCard image URL: $url");
               return Stack(
                 children: [
                   ClipRRect(
@@ -193,41 +191,12 @@ class _PostCardState extends State<_PostCard> {
                       topLeft: Radius.circular(16),
                       topRight: Radius.circular(16),
                     ),
-                    child: Image.network(
-                      url,
+                    child: PostCover(
+                      imagePath: widget.post.image,
                       width: cardWidth,
                       height: 180,
                       fit: BoxFit.cover,
-                      loadingBuilder: (_, child, progress) => progress == null
-                          ? child
-                          : Container(
-                              height: 180,
-                              color: Colors.grey[100],
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                    color: AppColors.gradient1,
-                                    strokeWidth: 1),
-                              ),
-                            ),
-                      errorBuilder: (_, error, __) => Container(
-                        height: 180,
-                        color: Colors.grey[100],
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.broken_image_outlined,
-                                color: Colors.grey, size: 32),
-                            const SizedBox(height: 8),
-                            Text(
-                              url,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  color: Colors.red, fontSize: 11),
-                            ),
-                          ],
-                        ),
-                      ),
+                      playButtonSize: 48,
                     ),
                   ),
                   if (widget.isAdmin)

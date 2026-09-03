@@ -58,30 +58,113 @@
     100% {
         transform: rotate(360deg);
     }
-    } 
+    }
+
+    #load-percent {
+      margin-top: 12px;
+      color: rgb(233, 15, 15);
+      font-weight: 600;
+      font-size: 15px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      letter-spacing: 0.5px;
+    }
 </style>
 </head>
 <script type="text/javascript">
   window.flutterWebRenderer = "html";
 </script>
 <body>
-  <script src="main.dart.js?version=2" type="application/javascript"></script>
   <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
+    (function () {
+      var SRC = "main.dart.js?version=2";
+      // Used only when the server doesn't report a content length.
+      var FALLBACK_TOTAL_BYTES = 3000000;
+
+      var pct = 0;
+      var percentEl;
+      var booted = false;
+
+      function render() {
+        if (percentEl) percentEl.textContent = pct + '%';
+      }
+      // Monotonic — the number never goes backwards.
+      function bump(next) {
+        next = Math.max(0, Math.min(100, Math.round(next)));
+        if (next > pct) { pct = next; render(); }
+      }
+
+      // Hand off to Flutter's own loader. It downloads + executes main.dart.js
+      // exactly once (served warm from the browser cache after the progress
+      // fetch below), so nothing is declared twice.
+      function boot() {
+        if (booted) return;
+        booted = true;
+        bump(91);
+        _flutter.loader.loadEntrypoint({
+          serviceWorker: { serviceWorkerVersion: serviceWorkerVersion },
+          onEntrypointLoaded: function (engineInitializer) {
+            bump(94);
+            engineInitializer.initializeEngine().then(function (appRunner) {
+              bump(97);
+              return appRunner.runApp();
+            }).then(function () {
+              bump(100);
+              var host = document.getElementById('loading');
+              if (host) {
+                host.style.transition = 'opacity .4s ease';
+                host.style.opacity = '0';
+                setTimeout(function () {
+                  if (host && host.parentNode) host.parentNode.removeChild(host);
+                }, 500);
+              }
+            });
+          }
+        });
+      }
+
+      // Stream the download purely to report progress (and warm the cache).
+      // We do NOT execute what we read here — boot() does the real load.
+      function measureThenBoot() {
+        if (!window.fetch || !window.ReadableStream) { boot(); return; }
+
+        fetch(SRC).then(function (resp) {
+          if (!resp.ok || !resp.body) { boot(); return; }
+
+          var total = parseInt(
+            resp.headers.get('x-decompressed-content-length') ||
+            resp.headers.get('content-length') || '0', 10);
+          var haveTotal = total > 0;
+
+          var reader = resp.body.getReader();
+          var received = 0;
+
+          function pump() {
+            return reader.read().then(function (r) {
+              if (r.done) { boot(); return; }
+              received += r.value.length;
+              var denom = haveTotal ? total : FALLBACK_TOTAL_BYTES;
+              // Download phase maps to 0–89%.
+              bump(Math.min(haveTotal ? 89 : 85, received / denom * 90));
+              return pump();
+            });
+          }
+
+          return pump();
+        }).catch(function () {
+          boot();
+        });
+      }
+
+      window.addEventListener('load', function () {
+        percentEl = document.getElementById('load-percent');
+        render();
+        measureThenBoot();
+        // Safety net: never let the progress fetch strand the app.
+        setTimeout(boot, 15000);
       });
-    });
+    })();
   </script>
-  <div style="width: 100%; height: 100%; display: flex;">
+  <div id="loading" style="width: 100%; height: 100%; display: flex;">
     <div style="padding-top: 10px; padding-bottom: 10px; width: 400px; justify-content: center; margin-top: auto; margin-bottom: auto;  margin-left: auto; margin-right: auto; position: relative;  ">
        <!-- <img src="web/love_c_mana/assets/images/aps_ayiku.jpg"/> -->
        <div style="width:100%; height: 150px; text-align: center;">
@@ -90,13 +173,13 @@
        <div style="width:100%; height: 50px; margin-top: 25px; text-align: center;">
           <label style=" color: rgb(233, 15, 15); font-weight:500; font-size: 20px;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Frankatson Limited</label>
        </div>
-       <div style="width: 100%; height: 50px;">
+       <div style="width: 100%; text-align: center;">
           <div style="width: 40px; height: 40px; margin-left: auto; margin-right: auto;">
               <span class="loader"></span>
           </div>
-      
+          <div id="load-percent">0%</div>
        </div>
-   </div> 
+   </div>
   </div>
 </body>
 </html>
