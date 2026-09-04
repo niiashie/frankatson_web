@@ -7,6 +7,7 @@ import 'package:frankoweb/constants/api.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
+import 'package:frankoweb/models/api_response.dart';
 import 'package:frankoweb/models/news.dart';
 import 'package:frankoweb/services/app.service.dart';
 import 'package:frankoweb/ui/news/widget/cover_video_preview.dart';
@@ -49,8 +50,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   String get _coverUrl => "${Api.dataUrl}${widget.post.image}";
 
   void _startCoverVideo() {
-    debugPrint(
-        '[PostDetail] _startCoverVideo() — playing cover video: $_coverUrl');
     setState(() {
       _playCoverVideo = true;
       _videoReady = false;
@@ -60,15 +59,12 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     // instead of an endless spinner.
     Future.delayed(const Duration(seconds: 20), () {
       if (mounted && _playCoverVideo && !_videoReady) {
-        debugPrint(
-            '[PostDetail] cover video ready-timeout — revealing element');
         setState(() => _videoReady = true);
       }
     });
   }
 
   void _stopCoverVideo() {
-    debugPrint('[PostDetail] _stopCoverVideo()');
     setState(() {
       _playCoverVideo = false;
       _videoReady = false;
@@ -76,14 +72,12 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   void _onCoverVideoReady() {
-    debugPrint('[PostDetail] _onCoverVideoReady()');
     if (!mounted || _videoReady) return;
     setState(() => _videoReady = true);
   }
 
   @override
   void initState() {
-    debugPrint("Is it a video cover  : $_isVideoCover");
     super.initState();
     _likesCount = widget.post.likesCount;
     _scrollController.addListener(() {
@@ -111,7 +105,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   Future<void> _loadComments({int page = 1}) async {
-    debugPrint("Load comments called");
     if (page == 1) {
       setState(() => _loadingComments = true);
     } else {
@@ -180,8 +173,16 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       if (res.ok) {
         _commentController.clear();
         _loadComments(page: 1);
+      } else {
+        _appService.showErrorFromApiRequest(
+          message: res.message ?? "Sorry, your comment could not be posted.",
+        );
       }
-    } on DioException catch (_) {
+    } on DioException catch (e) {
+      final errorResponse = ApiResponse.parse(e.response);
+      _appService.showErrorFromApiRequest(
+        message: errorResponse.message ?? "Sorry, something went wrong.",
+      );
     } finally {
       setState(() => _submittingComment = false);
     }
@@ -433,16 +434,13 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           behavior: HitTestBehavior.opaque,
           onPointerDown: (e) {
             _heroPointerDownPos = e.position;
-            debugPrint('[PostDetail] hero pointer DOWN @ ${e.localPosition}');
           },
           onPointerUp: (e) {
             final start = _heroPointerDownPos;
             _heroPointerDownPos = null;
-            debugPrint('[PostDetail] hero pointer UP (start=$start)');
             if (start == null) return;
             if ((e.position - start).distance > 12) return; // scroll / drag
             if (_playCoverVideo) return;
-            debugPrint('[PostDetail] hero tap -> starting video');
             _startCoverVideo();
           },
           child: heroStack,

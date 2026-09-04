@@ -198,7 +198,7 @@ class _PostCardState extends State<_PostCard> {
                     color: Colors.grey[100],
                     child: PostCover(
                       imagePath: widget.post.image,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fill,
                       width: double.infinity,
                       height: double.infinity,
                       playButtonSize: 44,
