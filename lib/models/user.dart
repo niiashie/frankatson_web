@@ -1,3 +1,5 @@
+import 'package:frankoweb/utils/json_parse.dart';
+
 class User {
   int? id;
   String? name;
@@ -23,11 +25,11 @@ class User {
 
   User.fromJson(Map<String, dynamic> json, String type) {
     if (type == "login") {
-      id = json['user']['id'];
+      id = asInt(json['user']['id']);
       name = json['user']['name'];
       email = json['user']['email'];
       location = json['user']['location'];
-      roleId = json['user']['role_id'];
+      roleId = asInt(json['user']['role_id']);
       image = json['user']['image'];
       token = json['token'];
       final roleObj = json['user']['role'];
@@ -36,7 +38,7 @@ class User {
           ? List<String>.from(roleObj['permissions'] ?? [])
           : [];
     } else {
-      id = json['id'];
+      id = asInt(json['id']);
       name = json['name'];
       email = json['email'];
       location = json['location'];

@@ -1,4 +1,5 @@
 import 'package:frankoweb/models/user.dart';
+import 'package:frankoweb/utils/json_parse.dart';
 
 class Post {
   int? id;
@@ -28,10 +29,10 @@ class Post {
   });
 
   Post.fromJson(Map<String, dynamic> json)
-      : likesCount = json['likes_count'] ?? 0,
-        commentsCount = json['comments_count'] ?? 0 {
-    id = json['id'];
-    authorId = json['author_id'];
+      : likesCount = asIntOr(json['likes_count'], 0),
+        commentsCount = asIntOr(json['comments_count'], 0) {
+    id = asInt(json['id']);
+    authorId = asInt(json['author_id']);
     title = json['title'];
     description = json['description'];
     content = json['content'];
@@ -49,7 +50,7 @@ class Comment {
   DateTime? createdAt;
 
   Comment.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = asInt(json['id']);
     body = json['body'];
     createdAt = DateTime.tryParse(json['created_at'] ?? '');
     try {

@@ -1,3 +1,5 @@
+import 'package:frankoweb/utils/json_parse.dart';
+
 class Gallery {
   int? id;
   String? image;
@@ -6,7 +8,7 @@ class Gallery {
   Gallery({this.id, this.image, this.date});
 
   Gallery.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = asInt(json['id']);
     image = json['image'];
     date = DateTime.parse(json['created_at']);
   }

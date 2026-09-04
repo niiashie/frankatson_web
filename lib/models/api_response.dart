@@ -1,3 +1,5 @@
+import 'package:frankoweb/utils/json_parse.dart';
+
 class ApiResponse {
   bool get ok => code == 200;
   int? code;
@@ -38,16 +40,16 @@ class ApiResponse {
         data = body["data"];
         meta = body["meta"];
         if (meta != null) {
-          fromValue = meta['from'] ?? 0;
-          toValue = meta['to'] ?? 0;
-          totalDataValue = meta['total'];
-          totalPagesValue = meta['last_page'];
-          currentPageValue = meta['current_page'];
+          fromValue = asIntOr(meta['from'], 0);
+          toValue = asIntOr(meta['to'], 0);
+          totalDataValue = asInt(meta['total']);
+          totalPagesValue = asInt(meta['last_page']);
+          currentPageValue = asInt(meta['current_page']);
         } else {
           // flat pagination (no meta wrapper)
-          totalDataValue = body['total'];
-          totalPagesValue = body['last_page'];
-          currentPageValue = body['current_page'];
+          totalDataValue = asInt(body['total']);
+          totalPagesValue = asInt(body['last_page']);
+          currentPageValue = asInt(body['current_page']);
         }
 
         message = body["message"] ?? "Sorry, something went wrong.";
