@@ -11,6 +11,7 @@ import 'package:frankoweb/ui/big_screen/widgets/partners_section.dart';
 import 'package:frankoweb/ui/big_screen/widgets/recent_posts_section.dart';
 import 'package:frankoweb/ui/big_screen/widgets/services_section.dart';
 import 'package:frankoweb/ui/news/widget/post_detail_screen.dart';
+import 'package:frankoweb/ui/shared/animations/animations.dart';
 import 'package:frankoweb/ui/shared/big_app_bar.dart';
 import 'package:frankoweb/ui/shared/footer.dart';
 import 'package:stacked/stacked.dart';
@@ -57,86 +58,101 @@ class BigScreenView extends StackedView<BigScreenViewModel> {
                     sectionKey: viewModel.key3,
                     partnerImages: viewModel.partnerImages.take(6).toList(),
                     partnerNames: viewModel.partnerNames.take(6).toList(),
-                    onViewMore: () => Navigator.of(context)
-                        .pushNamed(Routes.partnersScreen),
+                    onViewMore: () =>
+                        Navigator.of(context).pushNamed(Routes.partnersScreen),
                   ),
                   CoreTeamSection(sectionKey: viewModel.key4),
-                  GallerySection(images: viewModel.galleryImages),
+                  Reveal(
+                    effect: RevealEffect.fade,
+                    duration: const Duration(milliseconds: 800),
+                    child: GallerySection(images: viewModel.galleryImages),
+                  ),
                   RecentPostsSection(
                     posts: viewModel.recentPosts,
                     isLoading: viewModel.recentPostsLoading,
-                    onViewAll: () => Navigator.of(context)
-                        .pushNamed(Routes.postsScreen),
+                    onViewAll: () =>
+                        Navigator.of(context).pushNamed(Routes.postsScreen),
                     onPostTap: (post) => Navigator.of(context).push(
-                      MaterialPageRoute(
+                      FadePageRoute(
                         builder: (_) => PostDetailScreen(post: post),
                       ),
                     ),
                   ),
                   ContactSection(sectionKey: viewModel.key5),
-                  const Footer(),
+                  const Reveal(child: Footer()),
                 ],
               ),
             ),
-            Visibility(
-              visible: viewModel.showScrollUp,
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 20, bottom: 20),
-                  child: Material(
-                    borderRadius: const BorderRadius.all(Radius.circular(25)),
-                    elevation: 5,
-                    child: InkWell(
-                      child: Container(
-                        width: 50,
-                        height: 50,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(25)),
-                          color: AppColors.gradient1,
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.keyboard_double_arrow_up,
-                            color: Colors.white,
-                            size: 25,
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 20, bottom: 20),
+                child: AnimatedScale(
+                  scale: viewModel.showScrollUp ? 1 : 0,
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeOutBack,
+                  child: AnimatedOpacity(
+                    opacity: viewModel.showScrollUp ? 1 : 0,
+                    duration: const Duration(milliseconds: 250),
+                    child: Material(
+                      borderRadius: const BorderRadius.all(Radius.circular(25)),
+                      elevation: 5,
+                      child: InkWell(
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                            color: AppColors.gradient1,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.keyboard_double_arrow_up,
+                              color: Colors.white,
+                              size: 25,
+                            ),
                           ),
                         ),
+                        onTap: viewModel.moveUp,
                       ),
-                      onTap: viewModel.moveUp,
                     ),
                   ),
                 ),
               ),
             ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: viewModel.isScrolled
-                    ? Colors.white.withValues(alpha: 0.97)
-                    : Colors.transparent,
-                boxShadow: viewModel.isScrolled
-                    ? [
-                        BoxShadow(
-                          color: Colors.grey.withValues(alpha: 0.2),
-                          blurRadius: 12,
-                          offset: const Offset(0, 2),
-                        )
-                      ]
-                    : [],
-              ),
-              child: BigAppBar(
-                isScrolled: viewModel.isScrolled,
-                aboutUsClicked: viewModel.aboutUsClicked,
-                servicesClicked: viewModel.serviceClicked,
-                teamClicked: viewModel.teamClicked,
-                partnersClicked: viewModel.partnersClicked,
-                facebookClicked: () {},
-                linkedInClicked: () {},
-                blogClicked: () =>
-                    Navigator.of(context).pushNamed(Routes.blogScreen),
-                instagramClicked: () {},
+            Reveal(
+              effect: RevealEffect.slideDown,
+              distance: 24,
+              duration: const Duration(milliseconds: 550),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: viewModel.isScrolled
+                      ? Colors.white.withValues(alpha: 0.97)
+                      : Colors.transparent,
+                  boxShadow: viewModel.isScrolled
+                      ? [
+                          BoxShadow(
+                            color: Colors.grey.withValues(alpha: 0.2),
+                            blurRadius: 12,
+                            offset: const Offset(0, 2),
+                          )
+                        ]
+                      : [],
+                ),
+                child: BigAppBar(
+                  isScrolled: viewModel.isScrolled,
+                  aboutUsClicked: viewModel.aboutUsClicked,
+                  servicesClicked: viewModel.serviceClicked,
+                  teamClicked: viewModel.teamClicked,
+                  partnersClicked: viewModel.partnersClicked,
+                  facebookClicked: () {},
+                  linkedInClicked: () {},
+                  blogClicked: () =>
+                      Navigator.of(context).pushNamed(Routes.blogScreen),
+                  instagramClicked: () {},
+                ),
               ),
             ),
           ],

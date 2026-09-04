@@ -6,6 +6,7 @@ import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
 import 'package:frankoweb/constants/texts.dart';
 import 'package:frankoweb/ui/about_us/about_us_view_model.dart';
+import 'package:frankoweb/ui/shared/animations/animations.dart';
 import 'package:stacked/stacked.dart';
 
 class AboutUsView extends StackedView<AboutUsViewModel> {
@@ -24,7 +25,8 @@ class AboutUsView extends StackedView<AboutUsViewModel> {
   }
 
   @override
-  Widget builder(BuildContext context, AboutUsViewModel viewModel, Widget? child) {
+  Widget builder(
+      BuildContext context, AboutUsViewModel viewModel, Widget? child) {
     final isWide = MediaQuery.of(context).size.width >= 800;
     final isScrolled = viewModel.isScrolled;
 
@@ -166,7 +168,15 @@ class AboutUsView extends StackedView<AboutUsViewModel> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(AppImages.aboutUs, fit: BoxFit.cover),
+          const Reveal(
+            effect: RevealEffect.zoomOut,
+            scale: 0.94,
+            duration: Duration(milliseconds: 1100),
+            child: Image(
+              image: AssetImage(AppImages.aboutUs),
+              fit: BoxFit.cover,
+            ),
+          ),
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -182,40 +192,56 @@ class AboutUsView extends StackedView<AboutUsViewModel> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    "About Frankatson Ltd.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: AppFonts.poppinsBold,
-                      fontSize: isWide ? 44 : 26,
-                      letterSpacing: 0.5,
-                      shadows: const [
-                        Shadow(
-                            color: Colors.black38,
-                            blurRadius: 12,
-                            offset: Offset(0, 3)),
-                      ],
+                  Reveal(
+                    effect: RevealEffect.slideDown,
+                    distance: 28,
+                    child: Text(
+                      "About Frankatson Ltd.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: AppFonts.poppinsBold,
+                        fontSize: isWide ? 44 : 26,
+                        letterSpacing: 0.5,
+                        shadows: const [
+                          Shadow(
+                              color: Colors.black38,
+                              blurRadius: 12,
+                              offset: Offset(0, 3)),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 14),
-                  Container(
-                    width: 60,
-                    height: 3,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [AppColors.gradient1, AppColors.gradient2]),
-                      borderRadius: BorderRadius.all(Radius.circular(2)),
+                  const Reveal(
+                    effect: RevealEffect.zoomIn,
+                    scale: 0.1,
+                    delay: Duration(milliseconds: 160),
+                    child: SizedBox(
+                      width: 60,
+                      height: 3,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(colors: [
+                            AppColors.gradient1,
+                            AppColors.gradient2
+                          ]),
+                          borderRadius: BorderRadius.all(Radius.circular(2)),
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    "Your Trusted Partner in Veterinary, Agro-Chemical & Poultry Solutions",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontFamily: AppFonts.poppinsLight,
-                      fontSize: isWide ? 18 : 14,
+                  Reveal(
+                    delay: const Duration(milliseconds: 280),
+                    child: Text(
+                      "Your Trusted Partner in Veterinary, Agro-Chemical & Poultry Solutions",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontFamily: AppFonts.poppinsLight,
+                        fontSize: isWide ? 18 : 14,
+                      ),
                     ),
                   ),
                 ],
@@ -314,16 +340,34 @@ class AboutUsView extends StackedView<AboutUsViewModel> {
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(flex: 5, child: founderCard),
+                Expanded(
+                  flex: 5,
+                  child: Reveal(
+                    effect: RevealEffect.slideRight,
+                    distance: 60,
+                    child: founderCard,
+                  ),
+                ),
                 const SizedBox(width: 60),
-                Expanded(flex: 6, child: storyContent),
+                Expanded(
+                  flex: 6,
+                  child: Reveal(
+                    effect: RevealEffect.slideLeft,
+                    distance: 60,
+                    delay: const Duration(milliseconds: 140),
+                    child: storyContent,
+                  ),
+                ),
               ],
             )
           : Column(
               children: [
-                founderCard,
+                Reveal(child: founderCard),
                 const SizedBox(height: 40),
-                storyContent,
+                Reveal(
+                  delay: const Duration(milliseconds: 120),
+                  child: storyContent,
+                ),
               ],
             ),
     );
@@ -354,15 +398,15 @@ class AboutUsView extends StackedView<AboutUsViewModel> {
         ),
       ),
       child: isWide
-          ? const Row(
+          ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: items,
+              children: _stagger(items, effect: RevealEffect.zoomIn),
             )
-          : const Wrap(
+          : Wrap(
               spacing: 20,
               runSpacing: 28,
               alignment: WrapAlignment.center,
-              children: items,
+              children: _stagger(items, effect: RevealEffect.zoomIn),
             ),
     );
   }
@@ -377,22 +421,33 @@ class AboutUsView extends StackedView<AboutUsViewModel> {
           horizontal: isWide ? 60 : 24, vertical: isWide ? 70 : 50),
       child: Column(
         children: [
-          const Text(
-            "Our Mission & Values",
-            style: TextStyle(
-              color: AppColors.gradient2,
-              fontFamily: AppFonts.poppinsBold,
-              fontSize: 30,
+          const Reveal(
+            effect: RevealEffect.slideDown,
+            distance: 24,
+            child: Text(
+              "Our Mission & Values",
+              style: TextStyle(
+                color: AppColors.gradient2,
+                fontFamily: AppFonts.poppinsBold,
+                fontSize: 30,
+              ),
             ),
           ),
           const SizedBox(height: 8),
-          Container(
-            width: 60,
-            height: 3,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [AppColors.gradient1, AppColors.gradient2]),
-              borderRadius: BorderRadius.all(Radius.circular(2)),
+          const Reveal(
+            effect: RevealEffect.zoomIn,
+            scale: 0.1,
+            delay: Duration(milliseconds: 120),
+            child: SizedBox(
+              width: 60,
+              height: 3,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [AppColors.gradient1, AppColors.gradient2]),
+                  borderRadius: BorderRadius.all(Radius.circular(2)),
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 40),
@@ -400,7 +455,7 @@ class AboutUsView extends StackedView<AboutUsViewModel> {
             spacing: 24,
             runSpacing: 24,
             alignment: WrapAlignment.center,
-            children: [
+            children: _stagger([
               _MissionCard(
                 width: cardWidth,
                 icon: Icons.flag_outlined,
@@ -419,7 +474,7 @@ class AboutUsView extends StackedView<AboutUsViewModel> {
                 title: "Our Services",
                 body: AppTexts.aboutUs7,
               ),
-            ],
+            ], baseDelay: const Duration(milliseconds: 150)),
           ),
         ],
       ),
@@ -527,18 +582,53 @@ class AboutUsView extends StackedView<AboutUsViewModel> {
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(flex: 6, child: textContent),
+                Expanded(
+                  flex: 6,
+                  child: Reveal(
+                    effect: RevealEffect.slideRight,
+                    distance: 60,
+                    child: textContent,
+                  ),
+                ),
                 const SizedBox(width: 60),
-                Expanded(flex: 4, child: awardsCard),
+                Expanded(
+                  flex: 4,
+                  child: Reveal(
+                    effect: RevealEffect.slideLeft,
+                    distance: 60,
+                    delay: const Duration(milliseconds: 140),
+                    child: awardsCard,
+                  ),
+                ),
               ],
             )
           : Column(
               children: [
-                textContent,
+                Reveal(child: textContent),
                 const SizedBox(height: 40),
-                awardsCard,
+                Reveal(
+                  delay: const Duration(milliseconds: 120),
+                  child: awardsCard,
+                ),
               ],
             ),
+    );
+  }
+
+  /// Wraps each of [children] so they animate in one behind the other.
+  List<Widget> _stagger(
+    List<Widget> children, {
+    RevealEffect effect = RevealEffect.slideUp,
+    Duration baseDelay = Duration.zero,
+  }) {
+    return List.generate(
+      children.length,
+      (i) => Reveal.staggered(
+        index: i,
+        effect: effect,
+        baseDelay: baseDelay,
+        child: children[i],
+      ),
     );
   }
 

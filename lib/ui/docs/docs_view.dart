@@ -5,6 +5,7 @@ import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/ui/docs/docs_view_model.dart';
 import 'package:frankoweb/ui/docs/widget/docs_app_bar.dart';
 import 'package:frankoweb/ui/docs/widget/document_list.dart';
+import 'package:frankoweb/ui/shared/animations/animations.dart';
 import 'package:frankoweb/ui/docs/widget/document_upload_form.dart';
 import 'package:stacked/stacked.dart';
 
@@ -68,21 +69,21 @@ class DocumentScreenView extends StackedView<DocViewModel> {
           ),
         ],
       ),
-      floatingActionButton: MediaQuery.of(context).size.width >= 800 &&
-              viewModel.isAdmin
-          ? Visibility(
-              visible: !viewModel.showAddDocument,
-              child: FloatingActionButton.extended(
-                backgroundColor: AppColors.gradient2,
-                onPressed: viewModel.viewAddDocument,
-                icon: const Icon(Icons.add, color: Colors.white),
-                label: const Text("Add Document",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: AppFonts.poppinsMedium)),
-              ),
-            )
-          : const SizedBox(),
+      floatingActionButton:
+          MediaQuery.of(context).size.width >= 800 && viewModel.isAdmin
+              ? Visibility(
+                  visible: !viewModel.showAddDocument,
+                  child: FloatingActionButton.extended(
+                    backgroundColor: AppColors.gradient2,
+                    onPressed: viewModel.viewAddDocument,
+                    icon: const Icon(Icons.add, color: Colors.white),
+                    label: const Text("Add Document",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: AppFonts.poppinsMedium)),
+                  ),
+                )
+              : const SizedBox(),
     );
   }
 
@@ -125,55 +126,73 @@ class DocumentScreenView extends StackedView<DocViewModel> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    width: 76,
-                    height: 76,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.18),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.4),
-                          width: 2),
-                    ),
-                    child: const Center(
-                      child: Icon(Icons.folder_open_outlined,
-                          color: Colors.white, size: 38),
+                  Reveal(
+                    effect: RevealEffect.zoomIn,
+                    scale: 0.5,
+                    child: Container(
+                      width: 76,
+                      height: 76,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.18),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.4),
+                            width: 2),
+                      ),
+                      child: const Center(
+                        child: Icon(Icons.folder_open_outlined,
+                            color: Colors.white, size: 38),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    "Library",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: AppFonts.poppinsBold,
-                      fontSize: isWide ? 44 : 26,
-                      letterSpacing: 0.5,
-                      shadows: const [
-                        Shadow(
-                            color: Colors.black26,
-                            blurRadius: 10,
-                            offset: Offset(0, 3)),
-                      ],
+                  Reveal(
+                    effect: RevealEffect.slideDown,
+                    distance: 26,
+                    delay: const Duration(milliseconds: 120),
+                    child: Text(
+                      "Library",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: AppFonts.poppinsBold,
+                        fontSize: isWide ? 44 : 26,
+                        letterSpacing: 0.5,
+                        shadows: const [
+                          Shadow(
+                              color: Colors.black26,
+                              blurRadius: 10,
+                              offset: Offset(0, 3)),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 14),
-                  Container(
-                    width: 60,
-                    height: 3,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.55),
-                      borderRadius: const BorderRadius.all(Radius.circular(2)),
+                  Reveal(
+                    effect: RevealEffect.zoomIn,
+                    scale: 0.1,
+                    delay: const Duration(milliseconds: 240),
+                    child: Container(
+                      width: 60,
+                      height: 3,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.55),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(2)),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    "Company documents, reports and resources from Frankatson Ghana",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.85),
-                      fontFamily: AppFonts.poppinsLight,
-                      fontSize: isWide ? 18 : 13,
+                  Reveal(
+                    delay: const Duration(milliseconds: 340),
+                    child: Text(
+                      "Company documents, reports and resources from Frankatson Ghana",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.85),
+                        fontFamily: AppFonts.poppinsLight,
+                        fontSize: isWide ? 18 : 13,
+                      ),
                     ),
                   ),
                 ],

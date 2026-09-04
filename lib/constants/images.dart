@@ -25,7 +25,7 @@ class AppImages {
   static const String eye = "assets/images/eye.svg";
   static const String eyeSlash = "assets/images/eye_slash.svg";
   static const String director = "assets/images/director.jpg";
-  static const String charlotte = "assets/images/charlotte.jpg";
+  static const String akpalu = "assets/images/akpalu.jpeg";
   static const String joyce = "assets/images/aunty_joyce.jpg";
   static const String direcKum = "assets/images/dir_kum.jpg";
   static const String sefa = "assets/images/sefa.jpg";

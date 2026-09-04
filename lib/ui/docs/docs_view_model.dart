@@ -20,7 +20,7 @@ class DocViewModel extends BaseViewModel {
   List<dynamic> docList = [];
   html.File? file;
   PostsApi postsApi = PostsApi();
-  String filename = "No file selected", postedBy = "";
+  String filename = "No file selected";
   List<int>? selectedFile;
   Uint8List? bytesData;
   bool uploadDocumentLoading = false;
@@ -49,7 +49,6 @@ class DocViewModel extends BaseViewModel {
   getUser() async {
     Map<String, dynamic> user = await locator<AppService>().getUser();
     if (user.isNotEmpty) {
-      postedBy = user['id'];
       isAdmin = user['role'] == "admin";
       rebuildUi();
     }
@@ -103,7 +102,6 @@ class DocViewModel extends BaseViewModel {
     } else if (docKey.currentState!.validate()) {
       FormData data = FormData.fromMap({
         "title": title.text,
-        "posted_by": postedBy,
         "doc_file": MultipartFile.fromBytes(selectedFile!, filename: filename)
       });
 

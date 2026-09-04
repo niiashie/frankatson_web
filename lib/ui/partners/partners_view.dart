@@ -3,6 +3,7 @@ import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
 import 'package:frankoweb/ui/partners/partners_view_model.dart';
+import 'package:frankoweb/ui/shared/animations/animations.dart';
 import 'package:stacked/stacked.dart';
 
 class PartnersScreenView extends StackedView<PartnersViewModel> {
@@ -185,54 +186,73 @@ class PartnersScreenView extends StackedView<PartnersViewModel> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    width: 76,
-                    height: 76,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.18),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.4), width: 2),
-                    ),
-                    child: const Center(
-                      child: Icon(Icons.handshake_outlined,
-                          color: Colors.white, size: 38),
+                  Reveal(
+                    effect: RevealEffect.zoomIn,
+                    scale: 0.5,
+                    child: Container(
+                      width: 76,
+                      height: 76,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.18),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.4),
+                            width: 2),
+                      ),
+                      child: const Center(
+                        child: Icon(Icons.handshake_outlined,
+                            color: Colors.white, size: 38),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    "Our Partners",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: AppFonts.poppinsBold,
-                      fontSize: isWide ? 44 : 26,
-                      letterSpacing: 0.5,
-                      shadows: const [
-                        Shadow(
-                            color: Colors.black26,
-                            blurRadius: 10,
-                            offset: Offset(0, 3)),
-                      ],
+                  Reveal(
+                    effect: RevealEffect.slideDown,
+                    distance: 26,
+                    delay: const Duration(milliseconds: 120),
+                    child: Text(
+                      "Our Partners",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: AppFonts.poppinsBold,
+                        fontSize: isWide ? 44 : 26,
+                        letterSpacing: 0.5,
+                        shadows: const [
+                          Shadow(
+                              color: Colors.black26,
+                              blurRadius: 10,
+                              offset: Offset(0, 3)),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 14),
-                  Container(
-                    width: 60,
-                    height: 3,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.55),
-                      borderRadius: const BorderRadius.all(Radius.circular(2)),
+                  Reveal(
+                    effect: RevealEffect.zoomIn,
+                    scale: 0.1,
+                    delay: const Duration(milliseconds: 240),
+                    child: Container(
+                      width: 60,
+                      height: 3,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.55),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(2)),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    "Trusted International Suppliers Powering Agriculture Across Ghana",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.85),
-                      fontFamily: AppFonts.poppinsLight,
-                      fontSize: isWide ? 18 : 13,
+                  Reveal(
+                    delay: const Duration(milliseconds: 340),
+                    child: Text(
+                      "Trusted International Suppliers Powering Agriculture Across Ghana",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.85),
+                        fontFamily: AppFonts.poppinsLight,
+                        fontSize: isWide ? 18 : 13,
+                      ),
                     ),
                   ),
                 ],
@@ -253,33 +273,49 @@ class PartnersScreenView extends StackedView<PartnersViewModel> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Trusted Partnerships, Quality Products",
-            style: TextStyle(
-              color: AppColors.gradient2,
-              fontFamily: AppFonts.poppinsBold,
-              fontSize: 28,
+          const Reveal(
+            effect: RevealEffect.slideRight,
+            child: Text(
+              "Trusted Partnerships, Quality Products",
+              style: TextStyle(
+                color: AppColors.gradient2,
+                fontFamily: AppFonts.poppinsBold,
+                fontSize: 28,
+              ),
             ),
           ),
           const SizedBox(height: 8),
-          Container(
-            width: 50,
-            height: 3,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [AppColors.gradient1, AppColors.gradient2]),
-              borderRadius: BorderRadius.all(Radius.circular(2)),
+          Reveal(
+            effect: RevealEffect.zoomIn,
+            scale: 0.1,
+            delay: const Duration(milliseconds: 120),
+            child: Container(
+              width: 50,
+              height: 3,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [AppColors.gradient1, AppColors.gradient2]),
+                borderRadius: BorderRadius.all(Radius.circular(2)),
+              ),
             ),
           ),
           const SizedBox(height: 22),
-          const Text(
-            "Frankatson Ghana Limited is proud to work alongside some of the world's leading manufacturers and suppliers of veterinary pharmaceuticals, agrochemicals, and poultry equipment. These partnerships allow us to bring premium, industry-trusted products directly to farmers and agricultural businesses across Ghana and the West African sub-region.",
-            style: TextStyle(color: Colors.black87, fontSize: 15, height: 1.8),
+          const Reveal(
+            delay: Duration(milliseconds: 180),
+            child: Text(
+              "Frankatson Ghana Limited is proud to work alongside some of the world's leading manufacturers and suppliers of veterinary pharmaceuticals, agrochemicals, and poultry equipment. These partnerships allow us to bring premium, industry-trusted products directly to farmers and agricultural businesses across Ghana and the West African sub-region.",
+              style:
+                  TextStyle(color: Colors.black87, fontSize: 15, height: 1.8),
+            ),
           ),
           const SizedBox(height: 16),
-          const Text(
-            "Our international partners are carefully selected based on their commitment to quality, innovation, and sustainable agricultural practices — ensuring that our customers always receive products that meet the highest global standards.",
-            style: TextStyle(color: Colors.black87, fontSize: 15, height: 1.8),
+          const Reveal(
+            delay: Duration(milliseconds: 260),
+            child: Text(
+              "Our international partners are carefully selected based on their commitment to quality, innovation, and sustainable agricultural practices — ensuring that our customers always receive products that meet the highest global standards.",
+              style:
+                  TextStyle(color: Colors.black87, fontSize: 15, height: 1.8),
+            ),
           ),
           const SizedBox(height: 28),
           _buildCountriesRow(isWide),
@@ -303,38 +339,46 @@ class PartnersScreenView extends StackedView<PartnersViewModel> {
     return Wrap(
       spacing: 10,
       runSpacing: 10,
-      children: countries
+      children: countries.indexed
           .map(
-            (c) => Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.gradient2.withValues(alpha: 0.07),
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-                border: Border.all(
-                    color: AppColors.gradient2.withValues(alpha: 0.25),
-                    width: 1),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(c.$1,
-                      size: 14,
-                      color: AppColors.gradient2.withValues(alpha: 0.7)),
-                  const SizedBox(width: 6),
-                  Text(
-                    c.$2,
-                    style: const TextStyle(
-                      color: AppColors.gradient2,
-                      fontFamily: AppFonts.poppinsMedium,
-                      fontSize: 13,
-                    ),
-                  ),
-                ],
-              ),
+            (entry) => Reveal.staggered(
+              index: entry.$1,
+              effect: RevealEffect.zoomIn,
+              scale: 0.7,
+              step: const Duration(milliseconds: 60),
+              baseDelay: const Duration(milliseconds: 300),
+              child: _countryChip(entry.$2),
             ),
           )
           .toList(),
+    );
+  }
+
+  Widget _countryChip((IconData, String) c) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.gradient2.withValues(alpha: 0.07),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        border: Border.all(
+            color: AppColors.gradient2.withValues(alpha: 0.25), width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(c.$1,
+              size: 14, color: AppColors.gradient2.withValues(alpha: 0.7)),
+          const SizedBox(width: 6),
+          Text(
+            c.$2,
+            style: const TextStyle(
+              color: AppColors.gradient2,
+              fontFamily: AppFonts.poppinsMedium,
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -347,22 +391,30 @@ class PartnersScreenView extends StackedView<PartnersViewModel> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Our International Suppliers",
-            style: TextStyle(
-              color: AppColors.gradient2,
-              fontFamily: AppFonts.poppinsBold,
-              fontSize: 26,
+          const Reveal(
+            effect: RevealEffect.slideRight,
+            child: Text(
+              "Our International Suppliers",
+              style: TextStyle(
+                color: AppColors.gradient2,
+                fontFamily: AppFonts.poppinsBold,
+                fontSize: 26,
+              ),
             ),
           ),
           const SizedBox(height: 8),
-          Container(
-            width: 50,
-            height: 3,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [AppColors.gradient1, AppColors.gradient2]),
-              borderRadius: BorderRadius.all(Radius.circular(2)),
+          Reveal(
+            effect: RevealEffect.zoomIn,
+            scale: 0.1,
+            delay: const Duration(milliseconds: 120),
+            child: Container(
+              width: 50,
+              height: 3,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [AppColors.gradient1, AppColors.gradient2]),
+                borderRadius: BorderRadius.all(Radius.circular(2)),
+              ),
             ),
           ),
           const SizedBox(height: 36),
@@ -373,10 +425,16 @@ class PartnersScreenView extends StackedView<PartnersViewModel> {
               alignment: WrapAlignment.center,
               children: List.generate(
                 viewModel.partnerImages.length,
-                (i) => _PartnerCard(
-                  image: viewModel.partnerImages[i],
-                  name: viewModel.partnerNames[i],
-                  isWide: isWide,
+                (i) => Reveal.staggered(
+                  index: i,
+                  effect: RevealEffect.zoomIn,
+                  step: const Duration(milliseconds: 70),
+                  baseDelay: const Duration(milliseconds: 150),
+                  child: _PartnerCard(
+                    image: viewModel.partnerImages[i],
+                    name: viewModel.partnerNames[i],
+                    isWide: isWide,
+                  ),
                 ),
               ),
             ),

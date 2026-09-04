@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
+import 'package:frankoweb/ui/shared/animations/animations.dart';
 
 class DocumentList extends StatelessWidget {
   final bool isLoading;
@@ -30,63 +31,87 @@ class DocumentList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Document Library",
-            style: TextStyle(
-              color: AppColors.gradient2,
-              fontFamily: AppFonts.poppinsBold,
-              fontSize: 26,
+          const Reveal(
+            effect: RevealEffect.slideRight,
+            child: Text(
+              "Document Library",
+              style: TextStyle(
+                color: AppColors.gradient2,
+                fontFamily: AppFonts.poppinsBold,
+                fontSize: 26,
+              ),
             ),
           ),
           const SizedBox(height: 8),
-          Container(
-            width: 50,
-            height: 3,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [AppColors.gradient1, AppColors.gradient2]),
-              borderRadius: BorderRadius.all(Radius.circular(2)),
+          Reveal(
+            effect: RevealEffect.zoomIn,
+            scale: 0.1,
+            delay: const Duration(milliseconds: 120),
+            child: Container(
+              width: 50,
+              height: 3,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [AppColors.gradient1, AppColors.gradient2]),
+                borderRadius: BorderRadius.all(Radius.circular(2)),
+              ),
             ),
           ),
           const SizedBox(height: 36),
-          isLoading
-              ? const SizedBox(
-                  height: 300,
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CircularProgressIndicator(
-                            color: AppColors.gradient2, strokeWidth: 2),
-                        SizedBox(height: 16),
-                        Text("Loading documents...",
-                            style: TextStyle(color: Colors.grey)),
-                      ],
-                    ),
-                  ),
-                )
-              : docList.isEmpty
-                  ? const SizedBox(
-                      height: 200,
-                      child: Center(
-                        child: Text("No documents yet.",
-                            style: TextStyle(color: Colors.grey, fontSize: 15)),
+          // Cross-fade between the spinner, the empty state and the results
+          // so the list does not snap into place when a request lands.
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 350),
+            switchInCurve: Curves.easeOut,
+            switchOutCurve: Curves.easeIn,
+            child: isLoading
+                ? const SizedBox(
+                    key: ValueKey('loading'),
+                    height: 300,
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CircularProgressIndicator(
+                              color: AppColors.gradient2, strokeWidth: 2),
+                          SizedBox(height: 16),
+                          Text("Loading documents...",
+                              style: TextStyle(color: Colors.grey)),
+                        ],
                       ),
-                    )
-                  : Wrap(
-                      spacing: 24,
-                      runSpacing: 24,
-                      alignment: WrapAlignment.center,
-                      children: docList.map((doc) {
-                        final data = doc as Map<String, dynamic>;
-                        return _DocumentCard(
-                          doc: data,
-                          isWide: isWide,
-                          getFileExtension: getFileExtension,
-                          onDownload: () => onDownload(data),
-                        );
-                      }).toList(),
                     ),
+                  )
+                : docList.isEmpty
+                    ? const SizedBox(
+                        key: ValueKey('empty'),
+                        height: 200,
+                        child: Center(
+                          child: Text("No documents yet.",
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 15)),
+                        ),
+                      )
+                    : Wrap(
+                        key: const ValueKey('docs'),
+                        spacing: 24,
+                        runSpacing: 24,
+                        alignment: WrapAlignment.center,
+                        children: docList.indexed.map((entry) {
+                          final data = entry.$2 as Map<String, dynamic>;
+                          return Reveal.staggered(
+                            index: entry.$1,
+                            effect: RevealEffect.zoomIn,
+                            step: const Duration(milliseconds: 70),
+                            child: _DocumentCard(
+                              doc: data,
+                              isWide: isWide,
+                              getFileExtension: getFileExtension,
+                              onDownload: () => onDownload(data),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+          ),
         ],
       ),
     );

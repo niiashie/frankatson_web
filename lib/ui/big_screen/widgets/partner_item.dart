@@ -25,12 +25,14 @@ class PartnerItem extends StatelessWidget {
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
-                child: Center(
-                  child: Image.asset(
-                    image,
-                    width: 120,
-                    height: 120,
-                  ),
+                padding: const EdgeInsets.all(10),
+                // Partner logos range from square to 2:1 — `contain` keeps the
+                // wide ones whole instead of cropping them to the box.
+                child: Image.asset(
+                  image,
+                  fit: BoxFit.contain,
+                  width: double.infinity,
+                  height: double.infinity,
                 )),
           ),
           const SizedBox(

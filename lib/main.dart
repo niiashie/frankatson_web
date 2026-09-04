@@ -6,6 +6,7 @@ import 'package:frankoweb/app/router.dart';
 import 'package:frankoweb/app/theme.dart';
 import 'package:frankoweb/constants/app.dart';
 import 'package:frankoweb/constants/routes.dart';
+import 'package:frankoweb/ui/shared/idle_logout_watcher.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 void main() async {
@@ -25,6 +26,9 @@ class App extends StatelessWidget {
       initialRoute: Routes.bigScreen,
       onGenerateRoute: AppRouter.generateRoute,
       navigatorKey: StackedService.navigatorKey,
+      // Sits above the Navigator so idle time is tracked across every screen.
+      builder: (context, child) =>
+          IdleLogoutWatcher(child: child ?? const SizedBox.shrink()),
     );
   }
 }

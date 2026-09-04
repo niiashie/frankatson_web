@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
+import 'package:frankoweb/ui/shared/animations/animations.dart';
 
 class HeroSection extends StatelessWidget {
+  static const List<String> _headline = [
+    "Sort Out All",
+    "Your Veterinary And",
+    "Farming Issues With",
+    "The Farmer's Friend",
+  ];
+
   final Key? sectionKey;
   final VoidCallback onServicesClicked;
   final VoidCallback onContactClicked;
@@ -54,11 +62,17 @@ class HeroSection extends StatelessWidget {
           if (isWide)
             Align(
               alignment: Alignment.centerRight,
-              child: Image.asset(
-                AppImages.animals,
-                width: w / 2,
-                height: 520,
-                fit: BoxFit.contain,
+              child: Reveal(
+                effect: RevealEffect.slideLeft,
+                distance: 70,
+                duration: const Duration(milliseconds: 900),
+                delay: const Duration(milliseconds: 150),
+                child: Image.asset(
+                  AppImages.animals,
+                  width: w / 2,
+                  height: 520,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           Align(
@@ -69,64 +83,83 @@ class HeroSection extends StatelessWidget {
                   : const EdgeInsets.only(top: 100),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment:
-                    isWide ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+                crossAxisAlignment: isWide
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.center,
                 children: [
-                  Text("Sort Out All", style: headingStyle),
-                  Text("Your Veterinary And", style: headingStyle),
-                  Text("Farming Issues With", style: headingStyle),
-                  Text("The Farmer's Friend", style: headingStyle),
+                  ...List.generate(
+                    _headline.length,
+                    (i) => Reveal.staggered(
+                      index: i,
+                      effect: RevealEffect.slideRight,
+                      distance: 45,
+                      step: const Duration(milliseconds: 120),
+                      child: Text(_headline[i], style: headingStyle),
+                    ),
+                  ),
                   const SizedBox(height: 30),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Material(
-                        color: Colors.white,
-                        borderRadius: const BorderRadius.all(Radius.circular(25)),
-                        elevation: 2,
-                        child: InkWell(
-                          child: Container(
-                            width: 170,
-                            height: 50,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(25)),
+                  Reveal(
+                    delay: const Duration(milliseconds: 620),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        HoverLift(
+                          child: Material(
+                            color: Colors.white,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(25)),
+                            elevation: 2,
+                            child: InkWell(
+                              child: Container(
+                                width: 170,
+                                height: 50,
+                                decoration: const BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(25)),
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    "View Services",
+                                    style: TextStyle(
+                                      fontFamily: AppFonts.poppinsMedium,
+                                      color: AppColors.gradient2,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onTap: onServicesClicked,
                             ),
-                            child: const Center(
-                              child: Text(
-                                "View Services",
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppinsMedium,
-                                  color: AppColors.gradient2,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        HoverLift(
+                          child: InkWell(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(25)),
+                            child: Container(
+                              width: 170,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(25)),
+                                border:
+                                    Border.all(color: Colors.white, width: 1.5),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Contact Us",
+                                  style: TextStyle(
+                                    fontFamily: AppFonts.poppinsMedium,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          onTap: onServicesClicked,
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      InkWell(
-                        borderRadius: const BorderRadius.all(Radius.circular(25)),
-                        child: Container(
-                          width: 170,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(Radius.circular(25)),
-                            border: Border.all(color: Colors.white, width: 1.5),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              "Contact Us",
-                              style: TextStyle(
-                                fontFamily: AppFonts.poppinsMedium,
-                                color: Colors.white,
-                              ),
-                            ),
+                            onTap: onContactClicked,
                           ),
                         ),
-                        onTap: onContactClicked,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),

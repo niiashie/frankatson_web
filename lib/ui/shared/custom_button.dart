@@ -1,6 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sort_child_properties_last
 
 import 'package:flutter/material.dart';
+import 'package:frankoweb/ui/shared/animations/animations.dart';
 
 class CustomButton extends StatefulWidget {
   final Widget? title;
@@ -39,32 +40,43 @@ class CustomButton extends StatefulWidget {
 class _CustomButtonState extends State<CustomButton> {
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: widget.color,
-      elevation: widget.elevation!,
-      borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius!)),
-      child: InkWell(
-          child: Container(
-            width: widget.width,
-            height: widget.height,
-            constraints: BoxConstraints(maxWidth: widget.maxWidth!),
-            decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.all(Radius.circular(widget.borderRadius!)),
-                border: Border.all(width: 1, color: widget.borderColors!)),
-            child: Center(
-              child: widget.isLoading
-                  ? SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              widget.loadingColor!)))
-                  : widget.title,
+    return HoverLift(
+      // A disabled or busy button should not invite a click.
+      enabled: widget.ontap != null && !widget.isLoading,
+      scale: 1.02,
+      lift: 2,
+      child: Material(
+        color: widget.color,
+        elevation: widget.elevation!,
+        borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius!)),
+        child: InkWell(
+            child: Container(
+              width: widget.width,
+              height: widget.height,
+              constraints: BoxConstraints(maxWidth: widget.maxWidth!),
+              decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(widget.borderRadius!)),
+                  border: Border.all(width: 1, color: widget.borderColors!)),
+              child: Center(
+                // Cross-fade the spinner in rather than swapping the label out.
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: widget.isLoading
+                      ? SizedBox(
+                          key: const ValueKey('loading'),
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  widget.loadingColor!)))
+                      : widget.title,
+                ),
+              ),
             ),
-          ),
-          onTap: widget.ontap),
+            onTap: widget.ontap),
+      ),
     );
   }
 }

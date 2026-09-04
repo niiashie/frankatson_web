@@ -6,6 +6,7 @@ import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
 import 'package:frankoweb/services/app.service.dart';
 import 'package:frankoweb/ui/gallery/gallery_view_model.dart';
+import 'package:frankoweb/ui/shared/animations/animations.dart';
 import 'package:frankoweb/ui/shared/custom_button.dart';
 import 'package:stacked/stacked.dart';
 
@@ -443,7 +444,15 @@ class GalleryScreenView extends StackedView<GalleryViewModel> {
                                   spacing: 20,
                                   runSpacing: 20,
                                   alignment: WrapAlignment.center,
-                                  children: viewModel.items,
+                                  children: List.generate(
+                                    viewModel.items.length,
+                                    (i) => Reveal.staggered(
+                                      index: i,
+                                      effect: RevealEffect.zoomIn,
+                                      step: const Duration(milliseconds: 70),
+                                      child: viewModel.items[i],
+                                    ),
+                                  ),
                                 ),
                               ),
                               child: SizedBox(

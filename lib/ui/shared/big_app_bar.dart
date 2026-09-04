@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frankoweb/app/locator.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
 import 'package:frankoweb/constants/routes.dart';
-import 'package:frankoweb/services/app.service.dart';
 import 'package:frankoweb/ui/big_screen/widgets/nav_menu_item.dart';
+import 'package:frankoweb/ui/shared/account_menu.dart';
 import 'dart:html' as html;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -46,14 +45,6 @@ class BigAppBar extends StatefulWidget {
 }
 
 class _BigAppBarState extends State<BigAppBar> {
-  late final Future _userFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _userFuture = locator<AppService>().getUser();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -73,25 +64,19 @@ class _BigAppBarState extends State<BigAppBar> {
                   elevation: 5,
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   child: Container(
-                    width:
-                        MediaQuery.of(context).size.width >= 800 ? 50 : 30,
-                    height:
-                        MediaQuery.of(context).size.width >= 800 ? 50 : 30,
+                    width: MediaQuery.of(context).size.width >= 800 ? 50 : 30,
+                    height: MediaQuery.of(context).size.width >= 800 ? 50 : 30,
                     decoration: const BoxDecoration(
                         color: Colors.white,
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(10))),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
                     child: ClipRRect(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       child: Image.asset(
                         AppImages.logo,
-                        width: MediaQuery.of(context).size.width >= 800
-                            ? 50
-                            : 30,
-                        height: MediaQuery.of(context).size.width >= 800
-                            ? 50
-                            : 30,
+                        width:
+                            MediaQuery.of(context).size.width >= 800 ? 50 : 30,
+                        height:
+                            MediaQuery.of(context).size.width >= 800 ? 50 : 30,
                       ),
                     ),
                   ),
@@ -102,9 +87,8 @@ class _BigAppBarState extends State<BigAppBar> {
                   style: TextStyle(
                       color: AppColors.gradient2,
                       fontFamily: AppFonts.poppinsMedium,
-                      fontSize: MediaQuery.of(context).size.width >= 800
-                          ? 25
-                          : 18),
+                      fontSize:
+                          MediaQuery.of(context).size.width >= 800 ? 25 : 18),
                 )
               ],
             ),
@@ -213,98 +197,7 @@ class _BigAppBarState extends State<BigAppBar> {
                               "_blank");
                         },
                       ),
-                      FutureBuilder(
-                          future: _userFuture,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.done) {
-                              if (snapshot.hasError) {
-                                return const SizedBox();
-                              } else if (snapshot.hasData) {
-                                return snapshot.data!.isNotEmpty
-                                    ? PopupMenuButton(
-                                        icon: const Icon(
-                                          Icons.person,
-                                          size: 28,
-                                          color: AppColors.gradient2,
-                                        ),
-                                        padding: EdgeInsets.zero,
-                                        itemBuilder: (context) => [
-                                              PopupMenuItem(
-                                                value: "aboutUs",
-                                                padding: EdgeInsets.zero,
-                                                child: SizedBox(
-                                                    height: 70,
-                                                    width: 230,
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Container(
-                                                          width: 30,
-                                                          height: 30,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  color: Colors
-                                                                      .grey[400],
-                                                                  shape: BoxShape
-                                                                      .circle),
-                                                          child: const Center(
-                                                            child: Icon(
-                                                              Icons.person,
-                                                              color:
-                                                                  Colors.white,
-                                                              size: 15,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            width: 10),
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Text(
-                                                              "${snapshot.data!['name']}",
-                                                              style: const TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontSize: 14),
-                                                            ),
-                                                            Text(
-                                                              "${snapshot.data!['email']}",
-                                                              style: const TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontSize: 14),
-                                                            )
-                                                          ],
-                                                        )
-                                                      ],
-                                                    )),
-                                              ),
-                                            ])
-                                    : const SizedBox();
-                              }
-                            }
-                            return const SizedBox(
-                              width: 25,
-                              height: 25,
-                              child: Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          })
+                      const AccountMenu(),
                     ],
                   )
                 : Row(
@@ -348,6 +241,7 @@ class _BigAppBarState extends State<BigAppBar> {
                               "_blank");
                         },
                       ),
+                      const AccountMenu(iconSize: 22),
                       PopupMenuButton(
                         padding: EdgeInsets.zero,
                         icon: const Icon(

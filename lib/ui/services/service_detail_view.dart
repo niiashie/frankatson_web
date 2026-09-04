@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
+import 'package:frankoweb/ui/shared/animations/animations.dart';
 import 'package:frankoweb/constants/images.dart';
 
 class ServiceDetailView extends StatefulWidget {
@@ -225,52 +226,70 @@ class _ServiceDetailViewState extends State<ServiceDetailView> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    width: 76,
-                    height: 76,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.18),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.4),
-                          width: 2),
+                  Reveal(
+                    effect: RevealEffect.zoomIn,
+                    scale: 0.5,
+                    child: Container(
+                      width: 76,
+                      height: 76,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.18),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.4),
+                            width: 2),
+                      ),
+                      child: Center(child: iconWidget(38, Colors.white)),
                     ),
-                    child: Center(child: iconWidget(38, Colors.white)),
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    widget.title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: AppFonts.poppinsBold,
-                      fontSize: isWide ? 40 : 24,
-                      letterSpacing: 0.4,
-                      shadows: const [
-                        Shadow(
-                            color: Colors.black26,
-                            blurRadius: 10,
-                            offset: Offset(0, 3)),
-                      ],
+                  Reveal(
+                    effect: RevealEffect.slideDown,
+                    distance: 26,
+                    delay: const Duration(milliseconds: 120),
+                    child: Text(
+                      widget.title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: AppFonts.poppinsBold,
+                        fontSize: isWide ? 40 : 24,
+                        letterSpacing: 0.4,
+                        shadows: const [
+                          Shadow(
+                              color: Colors.black26,
+                              blurRadius: 10,
+                              offset: Offset(0, 3)),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 14),
-                  Container(
-                    width: 60,
-                    height: 3,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.55),
-                      borderRadius: const BorderRadius.all(Radius.circular(2)),
+                  Reveal(
+                    effect: RevealEffect.zoomIn,
+                    scale: 0.1,
+                    delay: const Duration(milliseconds: 240),
+                    child: Container(
+                      width: 60,
+                      height: 3,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.55),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(2)),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    widget.headline,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.85),
-                      fontFamily: AppFonts.poppinsLight,
-                      fontSize: isWide ? 17 : 13,
+                  Reveal(
+                    delay: const Duration(milliseconds: 340),
+                    child: Text(
+                      widget.headline,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.85),
+                        fontFamily: AppFonts.poppinsLight,
+                        fontSize: isWide ? 17 : 13,
+                      ),
                     ),
                   ),
                 ],
@@ -333,15 +352,18 @@ class _ServiceDetailViewState extends State<ServiceDetailView> {
       return Container(
         width: double.infinity,
         color: Colors.white,
-        padding:
-            EdgeInsets.symmetric(horizontal: hPad, vertical: vPad),
+        padding: EdgeInsets.symmetric(horizontal: hPad, vertical: vPad),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            textBlock,
+            Reveal(child: textBlock),
             if (photoCard != null) ...[
               const SizedBox(height: 32),
-              photoCard,
+              Reveal(
+                effect: RevealEffect.zoomIn,
+                delay: const Duration(milliseconds: 140),
+                child: photoCard,
+              ),
             ],
           ],
         ),
@@ -355,9 +377,24 @@ class _ServiceDetailViewState extends State<ServiceDetailView> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(flex: 6, child: textBlock),
+          Expanded(
+            flex: 6,
+            child: Reveal(
+              effect: RevealEffect.slideRight,
+              distance: 60,
+              child: textBlock,
+            ),
+          ),
           const SizedBox(width: 56),
-          Expanded(flex: 5, child: photoCard),
+          Expanded(
+            flex: 5,
+            child: Reveal(
+              effect: RevealEffect.slideLeft,
+              distance: 60,
+              delay: const Duration(milliseconds: 140),
+              child: photoCard,
+            ),
+          ),
         ],
       ),
     );
@@ -372,30 +409,43 @@ class _ServiceDetailViewState extends State<ServiceDetailView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            widget.bulletSectionTitle,
-            style: const TextStyle(
-              color: AppColors.gradient2,
-              fontFamily: AppFonts.poppinsBold,
-              fontSize: 22,
+          Reveal(
+            effect: RevealEffect.slideRight,
+            child: Text(
+              widget.bulletSectionTitle,
+              style: const TextStyle(
+                color: AppColors.gradient2,
+                fontFamily: AppFonts.poppinsBold,
+                fontSize: 22,
+              ),
             ),
           ),
           const SizedBox(height: 8),
-          Container(
-            width: 50,
-            height: 3,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [AppColors.gradient1, AppColors.gradient2]),
-              borderRadius: BorderRadius.all(Radius.circular(2)),
+          Reveal(
+            effect: RevealEffect.zoomIn,
+            scale: 0.1,
+            delay: const Duration(milliseconds: 120),
+            child: Container(
+              width: 50,
+              height: 3,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [AppColors.gradient1, AppColors.gradient2]),
+                borderRadius: BorderRadius.all(Radius.circular(2)),
+              ),
             ),
           ),
           const SizedBox(height: 30),
           Wrap(
             spacing: 16,
             runSpacing: 16,
-            children: widget.bullets
-                .map((b) => _BulletCard(text: b, isWide: isWide))
+            children: widget.bullets.indexed
+                .map((e) => Reveal.staggered(
+                      index: e.$1,
+                      step: const Duration(milliseconds: 70),
+                      baseDelay: const Duration(milliseconds: 160),
+                      child: _BulletCard(text: e.$2, isWide: isWide),
+                    ))
                 .toList(),
           ),
         ],
@@ -409,33 +459,37 @@ class _ServiceDetailViewState extends State<ServiceDetailView> {
       color: Colors.white,
       padding: EdgeInsets.symmetric(
           horizontal: isWide ? 80 : 24, vertical: isWide ? 50 : 36),
-      child: Row(
-        children: [
-          Container(
-            width: 4,
-            height: 60,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [AppColors.gradient1, AppColors.gradient2],
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(4)),
-            ),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Text(
-              widget.conclusionText,
-              style: const TextStyle(
-                color: Colors.black87,
-                fontSize: 15,
-                height: 1.8,
-                fontFamily: AppFonts.poppinsLight,
+      child: Reveal(
+        effect: RevealEffect.slideRight,
+        distance: 50,
+        child: Row(
+          children: [
+            Container(
+              width: 4,
+              height: 60,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [AppColors.gradient1, AppColors.gradient2],
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(4)),
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: 20),
+            Expanded(
+              child: Text(
+                widget.conclusionText,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontSize: 15,
+                  height: 1.8,
+                  fontFamily: AppFonts.poppinsLight,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

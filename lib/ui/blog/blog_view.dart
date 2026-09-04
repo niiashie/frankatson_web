@@ -6,6 +6,7 @@ import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
 import 'package:frankoweb/services/app.service.dart';
 import 'package:frankoweb/ui/blog/blog_view_model.dart';
+import 'package:frankoweb/ui/shared/animations/animations.dart';
 import 'package:frankoweb/ui/shared/custom_button.dart';
 import 'package:frankoweb/ui/shared/custom_form_field.dart';
 import 'package:stacked/stacked.dart';
@@ -234,7 +235,15 @@ class BlogScreenView extends StackedView<BlogViewModel> {
                                     spacing: 20,
                                     runSpacing: 20,
                                     alignment: WrapAlignment.center,
-                                    children: viewModel.items,
+                                    children: List.generate(
+                                      viewModel.items.length,
+                                      (i) => Reveal.staggered(
+                                        index: i,
+                                        effect: RevealEffect.zoomIn,
+                                        step: const Duration(milliseconds: 70),
+                                        child: viewModel.items[i],
+                                      ),
+                                    ),
                                   ),
                                 )
                               ],

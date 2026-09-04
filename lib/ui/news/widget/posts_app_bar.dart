@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
+import 'package:frankoweb/ui/shared/account_menu.dart';
 
 class PostsAppBar extends StatelessWidget {
   final bool isScrolled;
@@ -82,6 +83,10 @@ class PostsAppBar extends StatelessWidget {
                 ],
               ],
             ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: AccountMenu(color: fgColor, iconSize: isWide ? 26 : 22),
           ),
           Center(
             child: Row(

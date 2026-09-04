@@ -149,7 +149,6 @@ class PostsViewModel extends BaseViewModel {
         "title": title!.text,
         "content": content!.text,
         "description": description!.text,
-        "author_id": appService.localStorage['id'],
         "cover_img": MultipartFile.fromBytes(selectedFile!, filename: safeName)
       });
 

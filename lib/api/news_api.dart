@@ -63,8 +63,9 @@ class PostsApi extends BaseApi {
     return ApiResponse.parse(response);
   }
 
-  Future<ApiResponse> deleteComment(String commentId) async {
-    var response = await delete(url: "${Api.postComments}/$commentId");
+  Future<ApiResponse> deleteComment(String postId, String commentId) async {
+    var response =
+        await delete(url: "${Api.posts}/$postId/comments/$commentId");
     return ApiResponse.parse(response);
   }
 

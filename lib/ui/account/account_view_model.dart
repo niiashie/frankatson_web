@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frankoweb/api/auth_api.dart';
@@ -50,12 +48,29 @@ class AccountViewModel extends BaseViewModel {
         ApiResponse loginResponse = await authApi.login(data);
         if (loginResponse.ok) {
           debugPrint("response : ${loginResponse.body}");
-          appService.user = User.fromJson(loginResponse.body, "login");
-          appService.save(appService.user!);
+          final user = User.fromJson(loginResponse.body, "login");
+
+          // Without a token there is no session: every later request would go
+          // out unauthenticated and the UI would show the user as signed out.
+          // Fail loudly here rather than storing a half-session.
+          if ((user.token ?? '').isEmpty) {
+            loginLoading = false;
+            rebuildUi();
+            appService.showErrorFromApiRequest(
+                title: "Sign-in failed",
+                message: "The server did not return a session token. "
+                    "Please try again, or contact support if this persists.");
+            return;
+          }
+
+          appService.user = user;
+          await appService.save(user);
           loginLoading = false;
           resetValues();
           rebuildUi();
-          Navigator.of(StackedService.navigatorKey!.currentContext!).pop();
+          // `true` tells showAuthDialog's caller the user actually signed
+          // in, as opposed to dismissing the sheet.
+          Navigator.of(StackedService.navigatorKey!.currentContext!).pop(true);
         }
       } on DioException catch (e) {
         loginLoading = false;

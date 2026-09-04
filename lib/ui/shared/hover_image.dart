@@ -82,7 +82,7 @@ class _HoverImageState extends State<HoverImage>
                   0, 0, 0, 0, 1, 0, padding.value, padding.value, 0, 1),
               child: Image.asset(
                 widget.image,
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
             ),
           ),

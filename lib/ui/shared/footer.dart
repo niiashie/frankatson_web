@@ -1,8 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:frankoweb/ui/account/widget/auth_dialog.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
+import 'package:frankoweb/ui/shared/animations/animations.dart';
 import 'package:frankoweb/constants/images.dart';
 import 'package:frankoweb/constants/routes.dart';
 import 'dart:html' as html;
@@ -79,50 +81,61 @@ class _FooterState extends State<Footer> {
                           children: [
                             Expanded(
                               child: Center(
-                                child: InkWell(
-                                  child: const Icon(
-                                    Icons.facebook,
-                                    size: 25,
-                                    color: Colors.white,
+                                child: HoverLift(
+                                  scale: 1.25,
+                                  lift: 2,
+                                  child: InkWell(
+                                    child: const Icon(
+                                      Icons.facebook,
+                                      size: 25,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {
+                                      html.window.open(
+                                          'https://web.facebook.com/profile.php?id=100063269766759',
+                                          "_blank");
+                                    },
                                   ),
-                                  onTap: () {
-                                    html.window.open(
-                                        'https://web.facebook.com/profile.php?id=100063269766759',
-                                        "_blank");
-                                    //https://web.facebook.com/profile.php?id=100063269766759
-                                  },
                                 ),
                               ),
                             ),
                             Expanded(
                               child: Center(
-                                child: InkWell(
-                                  child: FaIcon(
-                                    FontAwesomeIcons.linkedin,
-                                    size: 25,
-                                    color: Colors.white,
+                                child: HoverLift(
+                                  scale: 1.25,
+                                  lift: 2,
+                                  child: InkWell(
+                                    child: FaIcon(
+                                      FontAwesomeIcons.linkedin,
+                                      size: 25,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {
+                                      html.window.open(
+                                          'https://www.linkedin.com/company/frankatson/mycompany/',
+                                          "_blank");
+                                    },
                                   ),
-                                  onTap: () {
-                                    html.window.open(
-                                        'https://www.linkedin.com/company/frankatson/mycompany/',
-                                        "_blank");
-                                  },
                                 ),
                               ),
                             ),
                             Expanded(
                               child: Center(
-                                child: InkWell(
-                                  child: FaIcon(
-                                    FontAwesomeIcons.instagram,
-                                    size: 25,
-                                    color: Colors.white,
+                                child: HoverLift(
+                                  scale: 1.25,
+                                  lift: 2,
+                                  child: InkWell(
+                                    child: FaIcon(
+                                      FontAwesomeIcons.instagram,
+                                      size: 25,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {
+                                      html.window.open(
+                                          'https://www.instagram.com/frankatson/?hl=en',
+                                          "_blank");
+                                    },
                                   ),
-                                  onTap: () {
-                                    html.window.open(
-                                        'https://www.instagram.com/frankatson/?hl=en',
-                                        "_blank");
-                                  },
                                 ),
                               ),
                             )
@@ -276,8 +289,7 @@ class _FooterState extends State<Footer> {
                                   TextStyle(color: Colors.white, fontSize: 17),
                             ),
                             onTap: () {
-                              Navigator.of(context)
-                                  .pushNamed(Routes.accountScreen);
+                              showAuthDialog(context);
                             },
                           ),
                           const SizedBox(height: 10),
@@ -334,47 +346,59 @@ class _FooterState extends State<Footer> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                InkWell(
-                                  child: const Icon(
-                                    Icons.facebook,
-                                    size: 25,
-                                    color: Colors.white,
+                                HoverLift(
+                                  scale: 1.25,
+                                  lift: 2,
+                                  child: InkWell(
+                                    child: const Icon(
+                                      Icons.facebook,
+                                      size: 25,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {
+                                      html.window.open(
+                                          'https://web.facebook.com/profile.php?id=100063269766759',
+                                          "_blank");
+                                    },
                                   ),
-                                  onTap: () {
-                                    html.window.open(
-                                        'https://web.facebook.com/profile.php?id=100063269766759',
-                                        "_blank");
-                                  },
                                 ),
                                 const SizedBox(
                                   width: 10,
                                 ),
-                                InkWell(
-                                  child: FaIcon(
-                                    FontAwesomeIcons.linkedin,
-                                    size: 25,
-                                    color: Colors.white,
+                                HoverLift(
+                                  scale: 1.25,
+                                  lift: 2,
+                                  child: InkWell(
+                                    child: FaIcon(
+                                      FontAwesomeIcons.linkedin,
+                                      size: 25,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {
+                                      html.window.open(
+                                          'https://www.linkedin.com/company/frankatson/mycompany/',
+                                          "_blank");
+                                    },
                                   ),
-                                  onTap: () {
-                                    html.window.open(
-                                        'https://www.linkedin.com/company/frankatson/mycompany/',
-                                        "_blank");
-                                  },
                                 ),
                                 const SizedBox(
                                   width: 10,
                                 ),
-                                InkWell(
-                                  child: FaIcon(
-                                    FontAwesomeIcons.instagram,
-                                    size: 25,
-                                    color: Colors.white,
+                                HoverLift(
+                                  scale: 1.25,
+                                  lift: 2,
+                                  child: InkWell(
+                                    child: FaIcon(
+                                      FontAwesomeIcons.instagram,
+                                      size: 25,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {
+                                      html.window.open(
+                                          'https://www.instagram.com/frankatson/?hl=en',
+                                          "_blank");
+                                    },
                                   ),
-                                  onTap: () {
-                                    html.window.open(
-                                        'https://www.instagram.com/frankatson/?hl=en',
-                                        "_blank");
-                                  },
                                 ),
                               ],
                             ),
@@ -556,8 +580,7 @@ class _FooterState extends State<Footer> {
                                     color: Colors.white, fontSize: 17),
                               ),
                               onTap: () {
-                                Navigator.of(context)
-                                    .pushNamed(Routes.accountScreen);
+                                showAuthDialog(context);
                               },
                             ),
                             const SizedBox(height: 10),

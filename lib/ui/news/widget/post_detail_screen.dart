@@ -1,15 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:frankoweb/ui/account/widget/auth_dialog.dart';
 import 'package:frankoweb/api/news_api.dart';
 import 'package:frankoweb/app/locator.dart';
 import 'package:frankoweb/constants/api.dart';
 import 'package:frankoweb/constants/colors.dart';
 import 'package:frankoweb/constants/fonts.dart';
 import 'package:frankoweb/constants/images.dart';
-import 'package:frankoweb/constants/routes.dart';
 import 'package:frankoweb/models/news.dart';
 import 'package:frankoweb/services/app.service.dart';
 import 'package:frankoweb/ui/news/widget/cover_video_preview.dart';
+import 'package:frankoweb/ui/shared/animations/animations.dart';
 import 'package:frankoweb/ui/news/widget/post_cover.dart';
 import 'package:frankoweb/utils/video_thumbnail.dart';
 import 'package:intl/intl.dart';
@@ -152,10 +153,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     if (_liking || _currentUserId.isEmpty) return;
     setState(() => _liking = true);
     try {
-      final res = await _api.likePost(
-        widget.post.id.toString(),
-        {'user_id': _currentUserId},
-      );
+      // The server takes the actor from the bearer token; sending an id here
+      // would be ignored, and trusting one would be forgeable.
+      final res = await _api.likePost(widget.post.id.toString(), null);
       if (res.ok) {
         setState(() {
           _liked = !_liked;
@@ -175,7 +175,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     try {
       final res = await _api.addComment(
         widget.post.id.toString(),
-        {'user_id': _currentUserId, 'body': text},
+        {'body': text},
       );
       if (res.ok) {
         _commentController.clear();
@@ -214,9 +214,15 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 hasImage ? _buildImageHero(isWide) : _buildGradientHero(isWide),
                 // Everything below the hero is hidden while the video plays.
                 if (!playingVideo) ...[
-                  _buildContent(isWide),
-                  _buildEngagement(isWide),
-                  _buildComments(isWide),
+                  Reveal(child: _buildContent(isWide)),
+                  Reveal(
+                    effect: RevealEffect.fade,
+                    child: _buildEngagement(isWide),
+                  ),
+                  Reveal(
+                    delay: const Duration(milliseconds: 100),
+                    child: _buildComments(isWide),
+                  ),
                   const SizedBox(height: 60),
                 ],
               ],
@@ -349,13 +355,13 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         if (_isVideoCover)
           PostCover(
             imagePath: widget.post.image,
-            fit: BoxFit.cover,
+            fit: BoxFit.contain,
             playButtonSize: isWide ? 74 : 58,
           )
         else
           Image.network(
             "${Api.dataUrl}${widget.post.image}",
-            fit: BoxFit.cover,
+            fit: BoxFit.contain,
             loadingBuilder: (_, child, progress) =>
                 progress == null ? child : Container(color: Colors.grey[200]),
             errorBuilder: (_, __, ___) =>
@@ -854,8 +860,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           ),
           InkWell(
             onTap: () async {
-              await Navigator.of(context).pushNamed(Routes.accountScreen);
-              if (mounted) _init();
+              if (await showAuthDialog(context) == true && mounted) _init();
             },
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             child: Container(

@@ -6,6 +6,7 @@ import 'package:frankoweb/constants/service_content.dart';
 import 'package:frankoweb/constants/texts.dart';
 import 'package:frankoweb/ui/big_screen/widgets/service_item.dart';
 import 'package:frankoweb/ui/services/service_detail_view.dart';
+import 'package:frankoweb/ui/shared/animations/animations.dart';
 
 class ServicesSection extends StatelessWidget {
   final Key? sectionKey;
@@ -13,8 +14,7 @@ class ServicesSection extends StatelessWidget {
   const ServicesSection({super.key, this.sectionKey});
 
   void _openDetail(BuildContext context, ServiceDetailView view) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => view));
+    Navigator.of(context).push(FadePageRoute(builder: (_) => view));
   }
 
   @override
@@ -33,23 +33,34 @@ class ServicesSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 50),
-          const Text(
-            "Our Services",
-            style: TextStyle(
-              color: AppColors.gradient2,
-              fontSize: 30,
-              fontFamily: AppFonts.poppinsBold,
+          const Reveal(
+            effect: RevealEffect.slideDown,
+            distance: 24,
+            child: Text(
+              "Our Services",
+              style: TextStyle(
+                color: AppColors.gradient2,
+                fontSize: 30,
+                fontFamily: AppFonts.poppinsBold,
+              ),
             ),
           ),
           const SizedBox(height: 5),
-          Container(
-            width: 70,
-            height: 3,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppColors.gradient1, AppColors.gradient2],
+          const Reveal(
+            effect: RevealEffect.zoomIn,
+            scale: 0.1,
+            delay: Duration(milliseconds: 120),
+            child: SizedBox(
+              width: 70,
+              height: 3,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppColors.gradient1, AppColors.gradient2],
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(2)),
+                ),
               ),
-              borderRadius: BorderRadius.all(Radius.circular(2)),
             ),
           ),
           const SizedBox(height: 40),
@@ -93,7 +104,10 @@ class ServicesSection extends StatelessWidget {
                       const ServiceDetailView(
                         title: "Agro Chemicals",
                         headline: AgroContent.headline,
-                        introParagraphs: [AgroContent.intro1, AgroContent.intro2],
+                        introParagraphs: [
+                          AgroContent.intro1,
+                          AgroContent.intro2
+                        ],
                         bulletSectionTitle: AgroContent.bulletTitle,
                         bullets: AgroContent.bullets,
                         conclusionText: AgroContent.conclusion,
@@ -143,7 +157,14 @@ class ServicesSection extends StatelessWidget {
                       ),
                     ),
                   ),
-                ],
+                ].asMap().entries.map<Widget>((entry) {
+                  return Reveal.staggered(
+                    index: entry.key,
+                    effect: RevealEffect.zoomIn,
+                    baseDelay: const Duration(milliseconds: 150),
+                    child: entry.value,
+                  );
+                }).toList(),
               ),
             ),
           ),
